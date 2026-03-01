@@ -1,0 +1,2755 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="리셋&빌드">
+    <meta name="theme-color" content="#0f1117">
+    <title>리셋 & 빌드 — 평온한 축적자</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #e05c5c;
+            --accent2: #f4a261;
+            --green: #52b788;
+            --text: #e8eaf0;
+            --text-muted: #8b90a8;
+            --border: rgba(255,255,255,0.07);
+            --shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px 16px 60px;
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(224,92,92,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(82,183,136,0.06) 0%, transparent 50%);
+        }
+
+        header {
+            text-align: center;
+            padding: 32px 0 28px;
+            animation: fadeDown 0.7s ease both;
+        }
+
+        header .subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        header h1 span {
+            color: var(--accent);
+        }
+
+        header .tagline {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Tab Nav */
+        .tab-nav {
+            display: flex;
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            animation: fadeDown 0.7s 0.1s ease both;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 4px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.72rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.25s;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: var(--surface2);
+            color: var(--text);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .icon-red { background: rgba(224,92,92,0.15); }
+        .icon-green { background: rgba(82,183,136,0.15); }
+        .icon-orange { background: rgba(244,162,97,0.15); }
+        .icon-blue { background: rgba(100,149,237,0.15); }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        /* Big Declaration Button */
+        .btn-declare {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: 'Noto Serif KR', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-declare:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .btn-declare:active { transform: translateY(0); }
+
+        .btn-declare::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(224,92,92,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-declare:hover::after { opacity: 1; }
+
+        .declare-status {
+            font-size: 0.78rem;
+            color: var(--green);
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+            transition: all 0.3s;
+        }
+
+        /* Inputs */
+        .field-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.85rem;
+            resize: none;
+            line-height: 1.6;
+            transition: border-color 0.2s;
+            margin-bottom: 12px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: rgba(224,92,92,0.4);
+        }
+
+        textarea::placeholder { color: var(--text-muted); }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .btn-save {
+            background: var(--green);
+            color: #0f1117;
+        }
+
+        .btn-save:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        .choice-btn {
+            flex: 1;
+            padding: 10px 4px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .choice-btn.selected {
+            background: rgba(224,92,92,0.15);
+            border-color: rgba(224,92,92,0.4);
+            color: var(--text);
+        }
+
+        /* Day selector */
+        .day-selector {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .day-btn {
+            padding: 7px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .day-btn.selected {
+            background: rgba(82,183,136,0.15);
+            border-color: rgba(82,183,136,0.4);
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        /* Self belief sliders */
+        .belief-slider-row {
+            margin-bottom: 18px;
+        }
+
+        .belief-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .belief-label strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        input[type="range"].green-thumb::-webkit-slider-thumb {
+            background: var(--green);
+        }
+        .rule-box {
+            background: rgba(224,92,92,0.08);
+            border: 1px solid rgba(224,92,92,0.25);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .rule-item:last-child { margin-bottom: 0; }
+
+        .rule-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 7px;
+        }
+
+        /* Sliders */
+        .slider-row {
+            margin-bottom: 18px;
+        }
+
+        .slider-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .slider-label { font-size: 0.82rem; color: var(--text-muted); }
+
+        .slider-value {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--surface2);
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        /* History */
+        .history-empty {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            padding: 24px 0;
+        }
+
+        .history-item {
+            background: var(--surface2);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .history-date {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .history-content {
+            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+
+        .history-content strong {
+            color: var(--accent2);
+            display: block;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        /* Tab panels */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--green);
+            color: #0f1117;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 12px 24px;
+            border-radius: 100px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+            white-space: nowrap;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Weekly score badge */
+        .week-saved {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        /* Date group in history */
+        .date-group {
+            margin-bottom: 20px;
+        }
+
+        .date-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .date-label {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .date-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .date-toggle {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            transition: transform 0.25s;
+        }
+
+        .date-toggle.collapsed { transform: rotate(-90deg); }
+
+        .date-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .entry-card {
+            background: var(--surface2);
+            border-radius: 10px;
+            padding: 13px 14px;
+            border-left: 3px solid var(--border);
+            animation: fadeUp 0.3s ease both;
+        }
+
+        .entry-type {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .entry-time {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-left: auto;
+            font-weight: 400;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+
+        .entry-row {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .entry-row:last-child { margin-bottom: 0; }
+
+        .entry-row .label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .entry-chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .chip {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+        }
+
+        .chip.red { background: rgba(224,92,92,0.15); color: var(--accent); }
+        .chip.green { background: rgba(82,183,136,0.15); color: var(--green); }
+        .chip.orange { background: rgba(244,162,97,0.15); color: var(--accent2); }
+
+        /* type colors */
+        .type-daily { border-left-color: var(--accent); }
+        .type-inner { border-left-color: #6495ed; }
+        .type-reflection { border-left-color: var(--green); }
+        .type-weekly { border-left-color: var(--accent2); }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="display:flex; flex-direction:column; align-items:center; justify-content:center; position:fixed; inset:0; background:var(--bg); z-index:9999; padding:32px;">
+    <div style="width:100%; max-width:380px;">
+        <div style="text-align:center; margin-bottom:40px;">
+            <div style="font-size:2.5rem; margin-bottom:12px;">🧘</div>
+            <div style="font-family:Noto Serif KR,serif; font-size:1.5rem; font-weight:700; color:var(--text); margin-bottom:6px;">리셋 &amp; 빌드</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">평온한 축적자의 공간</div>
+        </div>
+
+        <div id="loginForm">
+            <label style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:6px;">이메일</label>
+            <input id="authEmail" type="email" placeholder="your@email.com"
+                style="width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; margin-bottom:12px;">
+            <label style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:6px;">비밀번호</label>
+            <input id="authPassword" type="password" placeholder="••••••••"
+                style="width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; margin-bottom:20px;">
+            <button onclick="handleLogin()"
+                style="width:100%; background:var(--green); border:none; border-radius:12px; color:#fff; padding:15px; font-family:inherit; font-size:0.95rem; font-weight:700; cursor:pointer; margin-bottom:12px;">로그인</button>
+            <button onclick="showSignup()"
+                style="width:100%; background:transparent; border:1px solid var(--border); border-radius:12px; color:var(--text-muted); padding:13px; font-family:inherit; font-size:0.88rem; cursor:pointer;">처음 오셨나요? 회원가입</button>
+        </div>
+
+        <div id="signupForm" style="display:none;">
+            <label style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:6px;">이메일</label>
+            <input id="signupEmail" type="email" placeholder="your@email.com"
+                style="width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; margin-bottom:12px;">
+            <label style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:6px;">비밀번호 (6자 이상)</label>
+            <input id="signupPassword" type="password" placeholder="••••••••"
+                style="width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; color:var(--text); font-family:inherit; font-size:0.9rem; outline:none; margin-bottom:20px;">
+            <button onclick="handleSignup()"
+                style="width:100%; background:var(--accent2); border:none; border-radius:12px; color:#fff; padding:15px; font-family:inherit; font-size:0.95rem; font-weight:700; cursor:pointer; margin-bottom:12px;">회원가입</button>
+            <button onclick="showLogin()"
+                style="width:100%; background:transparent; border:1px solid var(--border); border-radius:12px; color:var(--text-muted); padding:13px; font-family:inherit; font-size:0.88rem; cursor:pointer;">← 로그인으로 돌아가기</button>
+        </div>
+
+        <div id="authMsg" style="margin-top:16px; text-align:center; font-size:0.82rem; min-height:20px; color:var(--accent);"></div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appWrapper" style="display:none; opacity:0; transition:opacity 0.3s;">
+
+<div class="container">
+
+    <header>
+        <div class="subtitle">Reset &amp; Build</div>
+        <h1>평온한 <span>축적자</span></h1>
+        <div class="tagline">증명에서 축적으로 · 과열에서 평온으로</div>
+    </header>
+
+    <nav class="tab-nav" style="flex-wrap: wrap; gap: 4px;">
+        <button class="tab-btn active" onclick="switchTab('daily')" style="flex: 1 1 calc(33% - 4px);">데일리</button>
+        <button class="tab-btn" onclick="switchTab('monthly')" style="flex: 1 1 calc(33% - 4px);">월간계획</button>
+        <button class="tab-btn" onclick="switchTab('weeklyplan')" style="flex: 1 1 calc(33% - 4px);">주간계획</button>
+        <button class="tab-btn" onclick="switchTab('safety')" style="flex: 1 1 calc(33% - 4px);">금융 원칙</button>
+        <button class="tab-btn" onclick="switchTab('weekly')" style="flex: 1 1 calc(33% - 4px);">위클리</button>
+        <button class="tab-btn" onclick="switchTab('energy')" style="flex: 1 1 calc(33% - 4px);">기운일기</button>
+        <button class="tab-btn" onclick="switchTab('gratitude')" style="flex: 1 1 calc(50% - 4px);">감사일기</button>
+        <button class="tab-btn" onclick="switchTab('emotion')" style="flex: 1 1 calc(50% - 4px);">감정일기</button>
+        <button class="tab-btn" onclick="switchTab('history')" style="flex: 1 1 100%; margin-top: 0;">📋 기록 보관함</button>
+    </nav>
+
+    <!-- DAILY TAB -->
+    <div class="tab-panel active" id="tab-daily">
+
+        <!-- 날짜 이동 헤더 -->
+        <div class="card" style="padding: 14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeDay(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="dailyDateLabel" style="font-family:'Noto Serif KR',serif; font-size:1rem; font-weight:700;"></div>
+                    <div id="dailyDayLabel" style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;"></div>
+                </div>
+                <button onclick="changeDay(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+
+        <!-- 수면시간 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-blue">🌙</div>
+                <div><div class="card-title">수면시간</div></div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--text-muted);">
+                        <span>🛏</span><span>취침시간</span>
+                    </div>
+                    <input type="time" id="sleepTime"
+                        style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:6px 10px; color:var(--text); font-family:inherit; font-size:0.82rem; outline:none; width:130px;">
+                </div>
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--text-muted);">
+                        <span>🌅</span><span>기상시간</span>
+                    </div>
+                    <input type="time" id="wakeTime"
+                        style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:6px 10px; color:var(--text); font-family:inherit; font-size:0.82rem; outline:none; width:130px;">
+                </div>
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:8px; font-size:0.82rem; color:var(--text-muted);">
+                        <span>⏱</span><span>총 수면시간</span>
+                    </div>
+                    <div id="totalSleep" style="font-size:0.88rem; font-weight:700; color:var(--green); min-width:130px; text-align:right; padding-right:4px;">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 축적 모드 선언 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-blue">🧘</div>
+                <div><div class="card-title">축적 모드 선언</div></div>
+            </div>
+            <div class="card-desc">아침에 눈 뜨자마자 한 번 외치고 클릭하세요.</div>
+            <button class="btn-declare" onclick="declare()">
+                "오늘은 증명이 아니라 축적이다"
+            </button>
+            <div class="declare-status" id="declareStatus"></div>
+        </div>
+
+        <!-- 오늘의 확언 + 할일 리스트 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(255,220,100,0.15);">✍️</div>
+                <div style="flex:1;"><div class="card-title">오늘의 확언 &amp; 할일 리스트</div></div>
+                <div id="dailyTodoAutoSave" style="font-size:0.72rem; color:var(--text-muted); min-height:16px;"></div>
+            </div>
+
+            <label class="field-label">오늘의 확언</label>
+            <textarea id="dailyAffirmation" rows="2" placeholder="오늘 나에게 하고 싶은 말..."></textarea>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;">
+                <!-- 반드시 해야 할 일 -->
+                <div>
+                    <div style="background:rgba(255,220,100,0.15); border-radius:8px; padding:7px 10px; font-size:0.75rem; font-weight:700; color:#e8c840; margin-bottom:8px; text-align:center;">반드시 해야 할 일</div>
+                    <div id="mustList"></div>
+                    <button onclick="addTodoItem('must')" style="width:100%; margin-top:6px; background:var(--surface2); border:1px dashed var(--border); border-radius:8px; color:var(--text-muted); padding:6px; cursor:pointer; font-size:0.8rem;">+ 추가</button>
+                </div>
+                <!-- 여유있게 할 수 있는 일 -->
+                <div>
+                    <div style="background:rgba(100,160,255,0.12); border-radius:8px; padding:7px 10px; font-size:0.75rem; font-weight:700; color:#6aa0e8; margin-bottom:8px; text-align:center;">여유있게 할 수 있는 일</div>
+                    <div id="mayList"></div>
+                    <button onclick="addTodoItem('may')" style="width:100%; margin-top:6px; background:var(--surface2); border:1px dashed var(--border); border-radius:8px; color:var(--text-muted); padding:6px; cursor:pointer; font-size:0.8rem;">+ 추가</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 시간표 -->
+        <div class="card" style="padding: 18px 14px;">
+            <div class="card-header" style="margin-bottom:12px;">
+                <div class="card-icon icon-orange">📅</div>
+                <div><div class="card-title">시간표</div></div>
+                <div id="scheduleAutoSave" style="font-size:0.72rem; color:var(--text-muted); margin-left:auto; min-height:16px;"></div>
+            </div>
+            <div id="scheduleTable"></div>
+        </div>
+
+        <!-- 오늘 못한일 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(150,150,200,0.15);">↪️</div>
+                <div><div class="card-title">오늘 못한일 &amp; 나중에 할일</div></div>
+            </div>
+            <div class="card-desc">미완성 항목은 다음날로 자동 이동됩니다.</div>
+            <div id="carryOverList" style="margin-bottom:10px;"></div>
+            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                <input type="text" id="carryInput" placeholder="추가할 항목..."
+                    style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-family:inherit; font-size:0.83rem; outline:none;"
+                    onkeydown="if(event.key==='Enter') addCarry()">
+                <button onclick="addCarry()" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:8px 14px; cursor:pointer; font-size:0.9rem;">+</button>
+            </div>
+        </div>
+
+        <!-- 하단 리뷰 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-green">😊</div>
+                <div><div class="card-title">오늘 잘한 것 / 좋았던 일 / 스스로 칭찬</div></div>
+            </div>
+            <div id="goodList" style="margin-bottom:10px;"></div>
+            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                <input type="text" id="goodInput" placeholder="오늘의 칭찬 한 줄..."
+                    style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-family:inherit; font-size:0.83rem; outline:none;"
+                    onkeydown="if(event.key==='Enter') addGood()">
+                <button onclick="addGood()" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:8px 14px; cursor:pointer; font-size:0.9rem;">+</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(100,200,150,0.15);">🍀</div>
+                <div><div class="card-title">오늘 부족했던 점을 개선할 방법 (PDCA)</div></div>
+            </div>
+            <div id="pdcaList" style="margin-bottom:10px;"></div>
+            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                <input type="text" id="pdcaInput" placeholder="개선할 점 한 줄..."
+                    style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px; color:var(--text); font-family:inherit; font-size:0.83rem; outline:none;"
+                    onkeydown="if(event.key==='Enter') addPdca()">
+                <button onclick="addPdca()" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:8px 14px; cursor:pointer; font-size:0.9rem;">+</button>
+            </div>
+        </div>
+
+        <!-- 불 감지 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-red">🔥</div>
+                <div><div class="card-title">불 감지 체크</div></div>
+            </div>
+            <div class="card-desc">오늘 과열의 순간을 짧게 기록하세요. 한 줄이면 충분합니다.</div>
+
+            <label class="field-label">속이 뜨거웠던 순간</label>
+            <textarea id="fireInput" rows="2" placeholder="ex) 동료의 성과가 신경 쓰였다..."></textarea>
+
+            <label class="field-label">무엇을 증명하려 했나?</label>
+            <textarea id="proofInput" rows="2" placeholder="ex) 내가 능력 있다는 것..."></textarea>
+
+            <label class="field-label">🛑 나는 멈췄나, 밀어붙였나?</label>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button class="choice-btn" id="choiceStop" onclick="selectChoice('stop')">🖐 멈췄다</button>
+                <button class="choice-btn" id="choicePush" onclick="selectChoice('push')">🔥 밀어붙였다</button>
+                <button class="choice-btn" id="choiceBoth" onclick="selectChoice('both')">↔ 반반</button>
+            </div>
+            <textarea id="choiceNote" rows="2" placeholder="어떻게 됐나요? 짧게..."></textarea>
+            <div id="dailyAutoSave" style="font-size:0.72rem; color:var(--text-muted); text-align:right; min-height:16px; margin-top:4px;"></div>
+        </div>
+
+    </div>
+
+    <!-- SAFETY TAB -->
+    <div class="tab-panel" id="tab-safety">
+
+        <div class="card" style="border-color: rgba(224,92,92,0.3);">
+            <div class="card-header">
+                <div class="card-icon icon-red">⚠️</div>
+                <div>
+                    <div class="card-title" style="color: var(--accent);">돈 관련 행동 원칙</div>
+                </div>
+            </div>
+            <div class="card-desc">금융 판단 전 반드시 이 화면을 3초간 보세요.</div>
+            <div class="rule-box">
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <div>큰 결정은 반드시 <strong style="color: var(--text);">24시간 유예</strong> 후 실행</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <div>감정이 올라온 상태에서는 <strong style="color: var(--text);">금융 판단 금지</strong></div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <div>'한 방'이 떠오르면 <strong style="color: var(--text);">"나는 재활 중"</strong>을 세 번 외치기</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-dot"></div>
+                    <div>지금 기분이 들떠 있나? 불안한가? 그렇다면 <strong style="color: var(--text);">멈추기</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-orange">💡</div>
+                <div>
+                    <div class="card-title">자기 점검 질문</div>
+                </div>
+            </div>
+            <div class="card-desc" style="margin: 0;">
+                결정하기 전, 아래 질문에 솔직하게 답해보세요.<br><br>
+                <span style="color: var(--text); line-height: 2;">
+                    1. 이 결정을 내일도 하고 싶을까?<br>
+                    2. 가장 존경하는 사람이 보면 어떻게 생각할까?<br>
+                    3. 최악의 경우 감당할 수 있는가?
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- WEEKLY TAB -->
+    <div class="tab-panel" id="tab-weekly">
+
+        <!-- 날짜 네비게이터 -->
+        <div class="card" style="padding:14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeWeeklyDay(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="weeklyDateLabel" style="font-family:'Noto Serif KR',serif; font-size:1rem; font-weight:700;"></div>
+                    <div id="weeklyDayLabel" style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;"></div>
+                </div>
+                <button onclick="changeWeeklyDay(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+
+        <!-- 내면 탐색 카드 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-blue">🪞</div>
+                <div style="flex:1;"><div class="card-title">내면 탐색</div></div>
+                <div id="weeklyAutoSave1" style="font-size:0.72rem; color:var(--text-muted); min-height:16px;"></div>
+            </div>
+
+            <div id="daySelectorInner" style="display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;"></div>
+
+            <div id="innerSelectedDateLabel" style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; min-height:16px;"></div>
+
+            <label class="field-label">오늘 내가 나를 문제라고 느낀 순간</label>
+            <textarea id="selfProblem" rows="2" placeholder="어떤 상황이었나요?"></textarea>
+
+            <label class="field-label">그때 부모 목소리는 뭐였나?</label>
+            <textarea id="parentVoice" rows="2" placeholder="ex) '넌 왜 항상 이 모양이야'..."></textarea>
+
+            <label class="field-label">그게 사실일 확률은 몇 %인가?</label>
+            <div class="slider-row" style="margin-bottom:12px;">
+                <div class="slider-top">
+                    <span class="slider-label">사실 확률</span>
+                    <span class="slider-value" id="truthVal" style="color:var(--accent);">30%</span>
+                </div>
+                <input type="range" id="truthScore" min="0" max="100" value="30"
+                    oninput="document.getElementById('truthVal').textContent=this.value+'%'; autoSaveWeekly()">
+            </div>
+
+            <label class="field-label">다른 해석은?</label>
+            <textarea id="altView" rows="2" placeholder="만약 틀렸다면, 또 다른 가능성은?"></textarea>
+        </div>
+
+        <!-- 이번 주 성찰 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-green">💬</div>
+                <div style="flex:1;"><div class="card-title">이번 주 성찰</div></div>
+                <div id="weeklyAutoSave2" style="font-size:0.72rem; color:var(--text-muted); min-height:16px;"></div>
+            </div>
+            <label class="field-label">잘 지킨 것</label>
+            <textarea id="goodNote" rows="2" placeholder="작은 것도 괜찮아요..."></textarea>
+            <label class="field-label">다음 주 다짐</label>
+            <textarea id="nextNote" rows="2" placeholder="한 가지만..."></textarea>
+        </div>
+
+        <!-- 지표 관리 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-orange">📊</div>
+                <div style="flex:1;"><div class="card-title">지표 관리</div></div>
+                <div id="weeklyAutoSave3" style="font-size:0.72rem; color:var(--text-muted); min-height:16px;"></div>
+            </div>
+            <div class="card-desc">이번 주 나의 상태를 솔직하게 평가하세요.</div>
+
+            <div class="slider-row">
+                <div class="slider-top"><span class="slider-label">🔥 과열 위험도</span><span class="slider-value" id="val1" style="color:var(--accent);">50%</span></div>
+                <input type="range" id="dangerScore" min="0" max="100" value="50"
+                    oninput="document.getElementById('val1').textContent=this.value+'%'; autoSaveWeekly()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-top"><span class="slider-label">🌱 긍정적 변화도</span><span class="slider-value" id="val2" style="color:var(--green);">50%</span></div>
+                <input type="range" id="changeScore" min="0" max="100" value="50"
+                    oninput="document.getElementById('val2').textContent=this.value+'%'; autoSaveWeekly()">
+            </div>
+            <div class="slider-row">
+                <div class="slider-top"><span class="slider-label">😌 평온도</span><span class="slider-value" id="val3" style="color:var(--accent2);">50%</span></div>
+                <input type="range" id="calmScore" min="0" max="100" value="50"
+                    oninput="document.getElementById('val3').textContent=this.value+'%'; autoSaveWeekly()">
+            </div>
+
+            <div style="height:1px; background:var(--border); margin:18px 0;"></div>
+
+            <div class="belief-slider-row">
+                <div class="belief-label"><strong>나는 아직도 위험한 사람 같다</strong></div>
+                <div class="slider-top" style="margin-bottom:8px;">
+                    <span class="slider-label">동의 정도</span>
+                    <span class="slider-value" id="dangerSelfVal" style="color:var(--accent);">50%</span>
+                </div>
+                <input type="range" id="dangerSelf" min="0" max="100" value="50"
+                    oninput="document.getElementById('dangerSelfVal').textContent=this.value+'%'; autoSaveWeekly()">
+            </div>
+            <div class="belief-slider-row">
+                <div class="belief-label"><strong>나는 예전보다 다를 수 있다</strong></div>
+                <div class="slider-top" style="margin-bottom:8px;">
+                    <span class="slider-label">믿음 정도</span>
+                    <span class="slider-value" id="changeSelfVal" style="color:var(--green);">50%</span>
+                </div>
+                <input type="range" id="changeSelf" min="0" max="100" value="50"
+                    oninput="document.getElementById('changeSelfVal').textContent=this.value+'%'; autoSaveWeekly()" class="green-thumb">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- GRATITUDE TAB -->
+    <div class="tab-panel" id="tab-gratitude">
+
+        <div class="card" style="padding:14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeGratitudeDay(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="gratitudeDateLabel" style="font-family:'Noto Serif KR',serif; font-size:1rem; font-weight:700;"></div>
+                    <div id="gratitudeDayLabel" style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;"></div>
+                </div>
+                <button onclick="changeGratitudeDay(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(244,162,97,0.15);">🙏</div>
+                <div style="flex:1;"><div class="card-title">감사 일기</div></div>
+                <div id="gratitudeDayBadge" style="background:rgba(244,162,97,0.15); border:1px solid rgba(244,162,97,0.3); border-radius:20px; padding:4px 12px; font-size:0.78rem; font-weight:700; color:var(--accent2); white-space:nowrap;"></div>
+            </div>
+
+            <div style="background:rgba(244,162,97,0.07); border:1px solid rgba(244,162,97,0.2); border-radius:12px; padding:16px 18px; margin-bottom:20px; text-align:center;">
+                <div style="font-family:'Noto Serif KR',serif; font-size:0.9rem; color:var(--accent2); line-height:1.8;">"감사도 연습을 통해서<br>당신의 내면에서 자연스럽게 키워낼 수 있습니다."</div>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:8px;">— 엄마, 자기사랑으로 가는 길 —</div>
+            </div>
+
+            <div class="gratitude-q">
+                <label class="field-label" style="font-size:0.82rem; color:var(--accent2); font-weight:700; margin-bottom:3px;">1. 나 자신에게 고마운 점은?</label>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:7px;">잘한 일, 신체, 감정, 고유의 특성</div>
+                <textarea id="g1" rows="2" placeholder="오늘의 나에게..."></textarea>
+            </div>
+            <div class="gratitude-q">
+                <label class="field-label" style="font-size:0.82rem; color:var(--accent2); font-weight:700; margin-bottom:3px;">2. 누군가에게 고마운 점은?</label>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:7px;">친절, 관심, 도움, 따뜻한 말, 영감</div>
+                <textarea id="g2" rows="2" placeholder="그 사람 덕분에..."></textarea>
+            </div>
+            <div class="gratitude-q">
+                <label class="field-label" style="font-size:0.82rem; color:var(--accent2); font-weight:700; margin-bottom:3px;">3. 삶에 감사한 점은?</label>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:7px;">자연, 시간, 사물, 돈, 의식주, 사회, 직업</div>
+                <textarea id="g3" rows="2" placeholder="오늘 내 곁에 있는 것들..."></textarea>
+            </div>
+            <div class="gratitude-q">
+                <label class="field-label" style="font-size:0.82rem; color:var(--accent2); font-weight:700; margin-bottom:3px;">4. 새롭게 배우거나 깨달은 일은?</label>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:7px;">실패, 시련, 책, 명상, 대화</div>
+                <textarea id="g4" rows="2" placeholder="오늘 알게 된 것..."></textarea>
+            </div>
+            <div class="gratitude-q">
+                <label class="field-label" style="font-size:0.82rem; color:var(--accent2); font-weight:700; margin-bottom:3px;">5. 꿈을 이루는 감사</label>
+                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:7px;">이미 이뤄진 것처럼 감사해 보기</div>
+                <textarea id="g5" rows="2" placeholder="나는 이미...에 감사합니다"></textarea>
+            </div>
+            <div id="gratitudeAutoSave" style="font-size:0.72rem; color:var(--text-muted); text-align:right; margin-top:8px; min-height:16px;"></div>
+        </div>
+
+    </div>
+
+    <!-- EMOTION TAB -->
+    <div class="tab-panel" id="tab-emotion">
+
+        <div class="card" style="padding:14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeEmotionDay(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="emotionDateLabel" style="font-family:'Noto Serif KR',serif; font-size:1rem; font-weight:700;"></div>
+                    <div id="emotionDayLabel" style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;"></div>
+                </div>
+                <button onclick="changeEmotionDay(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(255,182,193,0.15);">💗</div>
+                <div style="flex:1;"><div class="card-title">감정 일기</div></div>
+                <div id="emotionDayBadge" style="background:rgba(255,105,135,0.15); border:1px solid rgba(255,105,135,0.3); border-radius:20px; padding:4px 12px; font-size:0.78rem; font-weight:700; color:#ff6987; white-space:nowrap;"></div>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <label class="field-label" style="text-align:center; display:block; margin-bottom:8px;">나에게 칭찬 한 줄</label>
+                <textarea id="ePraise" rows="2" placeholder="오늘의 나에게 칭찬 한마디..."></textarea>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="background:rgba(255,105,135,0.2); color:#ff6987; font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px;">사건</span>
+                    <span style="font-size:0.82rem; color:var(--text);">오늘 가장 인상 깊었던 사건은 뭐야?</span>
+                </div>
+                <textarea id="e1" rows="2" placeholder="오늘 있었던 일..."></textarea>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="background:rgba(255,105,135,0.2); color:#ff6987; font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px;">감정</span>
+                    <span style="font-size:0.82rem; color:var(--text);">그때 어떤 감정이 들었어? (감정의 정체 파악하기)</span>
+                </div>
+                <textarea id="e2" rows="2" placeholder="기쁨, 슬픔, 불안, 화남, 외로움..."></textarea>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="background:rgba(255,105,135,0.2); color:#ff6987; font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px;">욕구</span>
+                    <span style="font-size:0.82rem; color:var(--text); line-height:1.4;">왜 그런 감정이 들었을까? 어떤 욕구나 신념이 숨어 있을까?</span>
+                </div>
+                <textarea id="e3" rows="2" placeholder="인정받고 싶었다, 안전하고 싶었다..."></textarea>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="background:rgba(255,105,135,0.2); color:#ff6987; font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px;">셀프토크</span>
+                    <span style="font-size:0.82rem; color:var(--text); line-height:1.4;">그 당시 듣고 싶었던 말은 뭐였어? 지금 이순간 듣고 싶은 말은?</span>
+                </div>
+                <textarea id="e4" rows="2" placeholder="'잘 버텼어', '충분해'..."></textarea>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <span style="background:rgba(255,105,135,0.2); color:#ff6987; font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px;">행동</span>
+                    <span style="font-size:0.82rem; color:var(--text); line-height:1.4;">다음번에 그런 상황에서 어떻게 행동하면 좋을까?</span>
+                </div>
+                <textarea id="e5" rows="2" placeholder="다음엔 이렇게 해볼게..."></textarea>
+            </div>
+            <div id="emotionAutoSave" style="font-size:0.72rem; color:var(--text-muted); text-align:right; min-height:16px;"></div>
+        </div>
+
+    </div>
+
+    <!-- MONTHLY PLAN TAB -->
+    <div class="tab-panel" id="tab-monthly">
+        <div class="card" style="padding:14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeMonth(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="monthlyLabel" style="font-family:'Noto Serif KR',serif; font-size:1rem; font-weight:700; color:var(--green);"></div>
+                    <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">월간 계획표</div>
+                </div>
+                <button onclick="changeMonth(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(100,180,255,0.15);">🗓</div>
+                <div style="flex:1;"><div class="card-title">이달의 나 (확언)</div></div>
+                <div id="monthlyAutoSave" style="font-size:0.72rem; color:var(--text-muted);"></div>
+            </div>
+            <textarea id="monthlyAffirm" rows="3" placeholder="이번 달 나에게 하는 말..."></textarea>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-green">🎯</div>
+                <div style="flex:1;"><div class="card-title">월 목표</div></div>
+            </div>
+            <div id="monthlyGoalList" style="margin-bottom:8px;"></div>
+            <div id="monthlyGoalInputArea"></div>
+            <button onclick="addMonthlyGoal()" style="width:100%; background:var(--surface2); border:1px dashed var(--border); border-radius:8px; color:var(--text-muted); padding:8px; cursor:pointer; font-size:0.82rem; margin-top:4px;">+ 목표 추가</button>
+        </div>
+        <div class="card" style="padding:14px;">
+            <div class="card-header" style="margin-bottom:12px;">
+                <div class="card-icon icon-orange">📆</div>
+                <div><div class="card-title">월 할일 (캘린더)</div></div>
+            </div>
+            <div id="monthlyCalendar" style="font-size:0.8rem;"></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(150,100,200,0.15);">📌</div>
+                <div><div class="card-title">반드시 해야 할 일</div></div>
+            </div>
+            <div id="monthlyMustList"></div>
+            <button onclick="addMonthlyMust()" style="width:100%; margin-top:8px; background:var(--surface2); border:1px dashed var(--border); border-radius:8px; color:var(--text-muted); padding:8px; cursor:pointer; font-size:0.82rem;">+ 추가</button>
+        </div>
+    </div>
+
+    <!-- WEEKLY PLAN TAB -->
+    <div class="tab-panel" id="tab-weeklyplan">
+        <div class="card" style="padding:14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeWeekPlan(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="weekplanLabel" style="font-family:'Noto Serif KR',serif; font-size:0.9rem; font-weight:700; color:var(--green);"></div>
+                    <div id="weekplanSub" style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;"></div>
+                </div>
+                <button onclick="changeWeekPlan(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(100,180,255,0.15);">💭</div>
+                <div style="flex:1;"><div class="card-title">이번 주 나의 확언</div></div>
+                <div id="weekplanAutoSave" style="font-size:0.72rem; color:var(--text-muted);"></div>
+            </div>
+            <textarea id="weekplanAffirm" rows="2" placeholder="이번 주 나에게 하는 말..."></textarea>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-green">🎯</div>
+                <div style="flex:1;"><div class="card-title">주간 목표</div></div>
+            </div>
+            <div id="weekplanGoalList" style="margin-bottom:8px;"></div>
+            <div id="weekplanGoalInputArea"></div>
+            <button onclick="addWeekplanGoal()" style="width:100%; background:var(--surface2); border:1px dashed var(--border); border-radius:8px; color:var(--text-muted); padding:8px; cursor:pointer; font-size:0.82rem; margin-top:4px;">+ 목표 추가</button>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-orange">📅</div>
+                <div><div class="card-title">요일별 고정 할일</div></div>
+            </div>
+            <div id="weekplanDays"></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(150,100,200,0.15);">📌</div>
+                <div><div class="card-title">이번 주 해야 할 일</div></div>
+            </div>
+            <div id="weekplanMustList"></div>
+            <button onclick="addWeekplanMust()" style="width:100%; margin-top:8px; background:var(--surface2); border:1px dashed var(--border); border-radius:8px; color:var(--text-muted); padding:8px; cursor:pointer; font-size:0.82rem;">+ 추가</button>
+        </div>
+    </div>
+
+    <!-- ENERGY DIARY TAB -->
+    <div class="tab-panel" id="tab-energy">
+        <div class="card" style="padding:14px 18px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <button onclick="changeEnergyDay(-1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">‹</button>
+                <div style="text-align:center;">
+                    <div id="energyDateLabel" style="font-family:'Noto Serif KR',serif; font-size:1rem; font-weight:700;"></div>
+                    <div id="energyDayLabel" style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;"></div>
+                </div>
+                <button onclick="changeEnergyDay(1)" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); padding:6px 14px; cursor:pointer; font-size:1rem;">›</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background:rgba(255,220,80,0.15);">⚡</div>
+                <div style="flex:1;">
+                    <div class="card-title" style="font-family:'Noto Serif KR',serif;">인생을 바꾸는 기운일기</div>
+                </div>
+                <div id="energyAutoSave" style="font-size:0.72rem; color:var(--text-muted);"></div>
+            </div>
+
+            <div style="background:rgba(255,220,80,0.1); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
+                <div style="font-size:0.78rem; font-weight:700; color:#e8c840; margin-bottom:8px; text-align:center;">☀️ 아침 응원일기</div>
+                <textarea id="energyMorning" rows="5" placeholder="오늘 아침, 나에게 응원의 말 한마디...&#10;오늘 하루도 잘 해낼 수 있어!"></textarea>
+            </div>
+
+            <div style="background:rgba(150,160,220,0.1); border-radius:10px; padding:12px 16px;">
+                <div style="font-size:0.78rem; font-weight:700; color:#a0a8e0; margin-bottom:8px; text-align:center;">🌙 저녁 토닥 / 격려 / 반성일기</div>
+                <textarea id="energyEvening" rows="5" placeholder="오늘 하루 수고했어...&#10;잘한 점, 아쉬운 점, 내일의 다짐"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-panel" id="tab-history">
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon icon-blue">📋</div>
+                <div><div class="card-title">기록 보관함</div></div>
+            </div>
+            <div id="historyList"></div>
+            <button class="btn" style="background: rgba(224,92,92,0.15); color: var(--accent); margin-top: 16px; font-size: 0.8rem;" onclick="clearHistory()">기록 전체 삭제</button>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // Tab switching
+    function switchTab(name) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        event.target.classList.add('active');
+        if (name === 'history') renderHistory();
+        if (name === 'monthly') { renderMonthlyHeader(); loadMonthlyData(); bindMonthlyAutoSave(); }
+        if (name === 'weeklyplan') { renderWeekPlanHeader(); loadWeekPlanData(); buildWeekPlanDays((() => { const r = localStorage.getItem(getWeekPlanKey()); return r ? JSON.parse(r).dayData || {} : {}; })()); bindWeekPlanAutoSave(); }
+    }
+
+    // Toast
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // Morning declaration
+    function declare() {
+        const today = new Date().toLocaleDateString('ko-KR');
+        localStorage.setItem('declare_' + today, '1');
+        const st = document.getElementById('declareStatus');
+        st.textContent = '✓ 오늘도 당신은 충분합니다. 축적 모드 가동!';
+        showToast('🧘 축적 모드 시작!');
+    }
+
+    // Choice button — defined below in autosave block
+    let selectedChoice = '';
+
+    // ─── Daily Planner State ───────────────────────────────
+    let currentDate = new Date();
+    currentDate.setHours(0,0,0,0);
+
+    const HOURS = ['AM 05:00','AM 06:00','AM 07:00','AM 08:00','AM 09:00','AM 10:00','AM 11:00',
+        'PM 12:00','PM 01:00','PM 02:00','PM 03:00','PM 04:00','PM 05:00','PM 06:00',
+        'PM 07:00','PM 08:00','PM 09:00','PM 10:00','PM 11:00','AM 00:00','AM 01:00','AM 02:00'];
+
+    const HOUR_COLORS = {
+        'AM 05:00':'#b8860b','AM 06:00':'#b8860b','AM 07:00':'#b8860b','AM 08:00':'#b8860b',
+        'AM 09:00':'#5b9bd5','AM 10:00':'#5b9bd5','AM 11:00':'#5b9bd5',
+        'PM 12:00':'#e05c5c',
+        'PM 01:00':'#7b9e7b','PM 02:00':'#7b9e7b','PM 03:00':'#7b9e7b','PM 04:00':'#7b9e7b',
+        'PM 05:00':'#8b7b9e','PM 06:00':'#8b7b9e',
+        'PM 07:00':'#c4793e','PM 08:00':'#c4793e',
+        'PM 09:00':'#c45c7a',
+        'PM 10:00':'#607080','PM 11:00':'#607080',
+        'AM 00:00':'#4a5568','AM 01:00':'#4a5568','AM 02:00':'#4a5568'
+    };
+
+    function dateKey(d) {
+        return d.toLocaleDateString('ko-KR').replace(/\s/g,'');
+    }
+
+    function changeDay(delta) {
+        currentDate.setDate(currentDate.getDate() + delta);
+        renderDailyHeader();
+        loadDailyData();
+    }
+
+    function renderDailyHeader() {
+        const days = ['일','월','화','수','목','금','토'];
+        const label = document.getElementById('dailyDateLabel');
+        const dayLabel = document.getElementById('dailyDayLabel');
+        const now = new Date(); now.setHours(0,0,0,0);
+        const diff = Math.round((currentDate - now) / 86400000);
+        const suffix = diff === 0 ? '오늘' : diff === 1 ? '내일' : diff === -1 ? '어제' : '';
+        label.textContent = currentDate.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'});
+        dayLabel.textContent = days[currentDate.getDay()] + '요일' + (suffix ? ' · ' + suffix : '');
+        label.style.color = diff === 0 ? 'var(--green)' : diff > 0 ? 'var(--accent2)' : 'var(--text-muted)';
+    }
+
+    function buildScheduleTable() {
+        const tbl = document.getElementById('scheduleTable');
+        tbl.innerHTML = '';
+        const grid = document.createElement('div');
+        grid.style.cssText = 'display:grid; grid-template-columns: 80px 1fr 1fr 1fr; gap:0;';
+
+        // header
+        ['⏰ 시간','Plan','Do','못 지킨 이유'].forEach((h,i) => {
+            const d = document.createElement('div');
+            d.textContent = h;
+            d.style.cssText = `padding:7px ${i===0?'4px':'6px'}; color:var(--text-muted); font-weight:700; font-size:0.72rem; border-bottom:1px solid var(--border);`;
+            grid.appendChild(d);
+        });
+
+        HOURS.forEach(h => {
+            const color = HOUR_COLORS[h] || '#607080';
+            // time badge
+            const td = document.createElement('div');
+            td.style.cssText = 'padding:6px 4px; border-bottom:1px solid rgba(255,255,255,0.04); display:flex; align-items:center;';
+            td.innerHTML = `<span style="background:${color}33; color:${color}; font-size:0.68rem; font-weight:700; padding:3px 7px; border-radius:12px; white-space:nowrap;">${h}</span>`;
+            grid.appendChild(td);
+
+            ['plan','do','reason'].forEach(col => {
+                const cell = document.createElement('div');
+                cell.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.04); border-left:1px solid rgba(255,255,255,0.04);';
+                const inp = document.createElement('textarea');
+                inp.rows = 1;
+                inp.dataset.hour = h;
+                inp.dataset.col = col;
+                inp.className = 'sched-input';
+                inp.style.cssText = 'width:100%; background:transparent; border:none; outline:none; color:var(--text); font-family:inherit; font-size:0.75rem; padding:8px 6px; resize:none; overflow:hidden; line-height:1.4; min-height:34px; display:block;';
+                inp.placeholder = '—';
+                inp.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+                cell.appendChild(inp);
+                grid.appendChild(cell);
+            });
+        });
+        tbl.appendChild(grid);
+        bindScheduleAutoSave();
+    }
+
+    function loadDailyData() {
+        const key = dateKey(currentDate);
+        const raw = localStorage.getItem('planner_' + key);
+        const data = raw ? JSON.parse(raw) : {};
+
+        // sleep
+        document.getElementById('sleepTime').value = data.sleepTime || '';
+        document.getElementById('wakeTime').value = data.wakeTime || '';
+        calcSleep();
+
+        // schedule
+        buildScheduleTable();
+        if (data.schedule) {
+            document.querySelectorAll('.sched-input').forEach(inp => {
+                const v = (data.schedule[inp.dataset.hour] || {})[inp.dataset.col] || '';
+                inp.value = v;
+                inp.style.height = 'auto';
+                if (v) inp.style.height = inp.scrollHeight + 'px';
+            });
+        }
+
+        // carry items
+        renderCarryList(data.carry || []);
+
+        // review
+        renderBulletList('goodList', data.good || [], 'goodInput', addGood);
+        renderBulletList('pdcaList', data.pdca || [], 'pdcaInput', addPdca);
+
+        // 불감지
+        document.getElementById('fireInput').value = data.fire || '';
+        document.getElementById('proofInput').value = data.proof || '';
+        document.getElementById('choiceNote').value = data.choiceNote || '';
+        selectedChoice = data.choice || '';
+        document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        if (selectedChoice) {
+            const map = { stop: 'choiceStop', push: 'choicePush', both: 'choiceBoth' };
+            const btn = document.getElementById(map[selectedChoice]);
+            if (btn) btn.classList.add('selected');
+        }
+        // daily todo
+        loadDailyTodo(data);
+
+        // bind textarea autosave
+        ['fireInput','proofInput','choiceNote'].forEach(id => {
+            const el = document.getElementById(id);
+            el.oninput = autoSaveDaily;
+        });
+
+        // carry over from yesterday
+        const yesterday = new Date(currentDate);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yRaw = localStorage.getItem('planner_' + dateKey(yesterday));
+        if (yRaw) {
+            const yData = JSON.parse(yRaw);
+            const unchecked = (yData.carry || []).filter(i => !i.done);
+            if (unchecked.length > 0) {
+                const existing = data.carry || [];
+                const existingTexts = existing.map(i => i.text);
+                unchecked.forEach(i => { if (!existingTexts.includes(i.text)) existing.push({text: i.text, done: false}); });
+                renderCarryList(existing);
+            }
+        }
+    }
+
+    function calcSleep() {
+        const s = document.getElementById('sleepTime').value;
+        const w = document.getElementById('wakeTime').value;
+        const el = document.getElementById('totalSleep');
+        if (!s || !w) { el.textContent = '—'; return; }
+        let [sh,sm] = s.split(':').map(Number);
+        let [wh,wm] = w.split(':').map(Number);
+        let mins = (wh*60+wm) - (sh*60+sm);
+        if (mins < 0) mins += 1440;
+        el.textContent = Math.floor(mins/60) + '시간 ' + (mins%60) + '분';
+    }
+    document.addEventListener('change', e => { if (e.target.id === 'sleepTime' || e.target.id === 'wakeTime') calcSleep(); });
+
+    function getPlannerData() {
+        const key = dateKey(currentDate);
+        const raw = localStorage.getItem('planner_' + key);
+        return raw ? JSON.parse(raw) : {};
+    }
+    function savePlannerData(data) {
+        localStorage.setItem('planner_' + dateKey(currentDate), JSON.stringify(data));
+    }
+
+    // Debounce helper
+    function debounce(fn, ms) {
+        let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+    }
+
+    function showAutoSaved(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = '✓ 자동저장됨';
+        el.style.color = 'var(--green)';
+        setTimeout(() => { el.textContent = ''; }, 1800);
+    }
+
+    // ── Auto-save: sleep ──
+    function autoSaveSleep() {
+        const data = getPlannerData();
+        data.sleepTime = document.getElementById('sleepTime').value;
+        data.wakeTime = document.getElementById('wakeTime').value;
+        calcSleep();
+        savePlannerData(data);
+        showAutoSaved('scheduleAutoSave');
+    }
+    document.addEventListener('change', e => {
+        if (e.target.id === 'sleepTime' || e.target.id === 'wakeTime') autoSaveSleep();
+    });
+
+    // ── Auto-save: schedule ──
+    const autoSaveSchedule = debounce(() => {
+        const data = getPlannerData();
+        data.schedule = {};
+        document.querySelectorAll('.sched-input').forEach(inp => {
+            if (!data.schedule[inp.dataset.hour]) data.schedule[inp.dataset.hour] = {};
+            data.schedule[inp.dataset.hour][inp.dataset.col] = inp.value;
+        });
+        savePlannerData(data);
+        showAutoSaved('scheduleAutoSave');
+    }, 800);
+
+    // bind schedule inputs — called after buildScheduleTable
+    function bindScheduleAutoSave() {
+        document.querySelectorAll('.sched-input').forEach(inp => {
+            inp.addEventListener('input', autoSaveSchedule);
+        });
+    }
+
+    // ── Carry over list ──
+    let carryItems = [];
+    function renderCarryList(items) {
+        carryItems = items;
+        const el = document.getElementById('carryOverList');
+        if (!items.length) { el.innerHTML = ''; return; }
+        el.innerHTML = items.map((item, i) => `
+            <div style="display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border);">
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleCarry(${i})"
+                    style="width:16px; height:16px; accent-color:var(--green); cursor:pointer; flex-shrink:0;">
+                <span style="font-size:0.83rem; flex:1; ${item.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${item.text}</span>
+                <button onclick="removeCarry(${i})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; padding:0 4px;">✕</button>
+            </div>`).join('');
+    }
+    function saveCarryAuto() {
+        const data = getPlannerData();
+        data.carry = carryItems;
+        savePlannerData(data);
+    }
+    function toggleCarry(i) { carryItems[i].done = !carryItems[i].done; renderCarryList(carryItems); saveCarryAuto(); }
+    function removeCarry(i) { carryItems.splice(i,1); renderCarryList(carryItems); saveCarryAuto(); }
+    function addCarry() {
+        const inp = document.getElementById('carryInput');
+        if (!inp.value.trim()) return;
+        carryItems.push({ text: inp.value.trim(), done: false });
+        inp.value = '';
+        renderCarryList(carryItems);
+        saveCarryAuto();
+    }
+
+    // ── Good / PDCA lists ──
+    let goodItems = [], pdcaItems = [];
+    function renderBulletList(containerId, items, inputId, addFn) {
+        if (containerId === 'goodList') goodItems = items;
+        if (containerId === 'pdcaList') pdcaItems = items;
+        const el = document.getElementById(containerId);
+        if (!items.length) { el.innerHTML = ''; return; }
+        el.innerHTML = items.map((item, i) => `
+            <div style="display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid var(--border);">
+                <span style="color:var(--green); font-size:0.8rem;">•</span>
+                <span style="font-size:0.83rem; flex:1;">${item}</span>
+                <button onclick="${addFn === addGood ? 'removeGood' : 'removePdca'}(${i})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; padding:0 4px;">✕</button>
+            </div>`).join('');
+    }
+    function saveReviewAuto() {
+        const data = getPlannerData();
+        data.good = goodItems;
+        data.pdca = pdcaItems;
+        savePlannerData(data);
+    }
+    function addGood() {
+        const inp = document.getElementById('goodInput');
+        if (!inp.value.trim()) return;
+        goodItems.push(inp.value.trim()); inp.value = '';
+        renderBulletList('goodList', goodItems, 'goodInput', addGood);
+        saveReviewAuto();
+    }
+    function removeGood(i) { goodItems.splice(i,1); renderBulletList('goodList', goodItems, 'goodInput', addGood); saveReviewAuto(); }
+    function addPdca() {
+        const inp = document.getElementById('pdcaInput');
+        if (!inp.value.trim()) return;
+        pdcaItems.push(inp.value.trim()); inp.value = '';
+        renderBulletList('pdcaList', pdcaItems, 'pdcaInput', addPdca);
+        saveReviewAuto();
+    }
+    function removePdca(i) { pdcaItems.splice(i,1); renderBulletList('pdcaList', pdcaItems, 'pdcaInput', addPdca); saveReviewAuto(); }
+
+    // ── Auto-save: 불감지 (debounced) ──
+    const autoSaveDaily = debounce(() => {
+        const fire = document.getElementById('fireInput').value.trim();
+        const proof = document.getElementById('proofInput').value.trim();
+        const choiceNote = document.getElementById('choiceNote').value.trim();
+        if (!fire && !proof && !selectedChoice && !choiceNote) return;
+        const data = getPlannerData();
+        data.fire = fire;
+        data.proof = proof;
+        data.choice = selectedChoice;
+        data.choiceNote = choiceNote;
+        savePlannerData(data);
+        showAutoSaved('dailyAutoSave');
+    }, 800);
+
+    function saveDaily() { autoSaveDaily(); } // kept for choice button compatibility
+
+    // also auto-save when choice button is clicked
+    function selectChoice(val) {
+        selectedChoice = val;
+        document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        const map = { stop: 'choiceStop', push: 'choicePush', both: 'choiceBoth' };
+        document.getElementById(map[val]).classList.add('selected');
+        autoSaveDaily();
+    }
+
+    // Slider
+    function updateSlider(id, valId, colorVar) {
+        const v = document.getElementById(id).value;
+        const el = document.getElementById(valId);
+        el.textContent = v + '%';
+    }
+
+    // ─── Weekly / Gratitude / Emotion date state ───────────────
+    let gratitudeDate = new Date(); gratitudeDate.setHours(0,0,0,0);
+    let emotionDate = new Date(); emotionDate.setHours(0,0,0,0);
+
+    function makeDateNavHeader(d) {
+        const days = ['일','월','화','수','목','금','토'];
+        const now = new Date(); now.setHours(0,0,0,0);
+        const diff = Math.round((d - now) / 86400000);
+        const suffix = diff === 0 ? '오늘' : diff === 1 ? '내일' : diff === -1 ? '어제' : '';
+        return {
+            label: d.toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'}),
+            sub: days[d.getDay()] + '요일' + (suffix ? ' · ' + suffix : ''),
+            color: diff === 0 ? 'var(--green)' : diff > 0 ? 'var(--accent2)' : 'var(--text-muted)'
+        };
+    }
+
+    // ── WEEKLY ──
+    // weeklyDate = any date within the current week being viewed
+    let weeklyDate = new Date(); weeklyDate.setHours(0,0,0,0);
+    let innerSelectedDate = null; // which day's inner diary is showing
+
+    function getMonday(d) {
+        const date = new Date(d);
+        const day = date.getDay(); // 0=Sun
+        const diff = day === 0 ? -6 : 1 - day; // Mon=0 offset
+        date.setDate(date.getDate() + diff);
+        date.setHours(0,0,0,0);
+        return date;
+    }
+
+    function changeWeeklyDay(delta) {
+        weeklyDate.setDate(weeklyDate.getDate() + delta * 7);
+        innerSelectedDate = null;
+        renderWeeklyHeader();
+        renderWeekDayButtons();
+        loadInnerForDay(null);
+        loadWeeklySharedData();
+    }
+
+    function renderWeeklyHeader() {
+        const mon = getMonday(weeklyDate);
+        const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+        const fmt = d => d.toLocaleDateString('ko-KR', {month:'long', day:'numeric'});
+        const label = document.getElementById('weeklyDateLabel');
+        const sub = document.getElementById('weeklyDayLabel');
+        label.textContent = `${mon.getFullYear()}년 ${fmt(mon)} ~ ${fmt(sun)}`;
+        label.style.color = 'var(--text)';
+        // check if current week
+        const now = new Date(); now.setHours(0,0,0,0);
+        const nowMon = getMonday(now);
+        if (mon.getTime() === nowMon.getTime()) {
+            label.style.color = 'var(--green)';
+            sub.textContent = '이번 주';
+        } else if (mon.getTime() > nowMon.getTime()) {
+            label.style.color = 'var(--accent2)';
+            sub.textContent = '다음 주';
+        } else {
+            label.style.color = 'var(--text-muted)';
+            const weeksAgo = Math.round((nowMon - mon) / (7 * 86400000));
+            sub.textContent = weeksAgo + '주 전';
+        }
+    }
+
+    function renderWeekDayButtons() {
+        const container = document.getElementById('daySelectorInner');
+        const mon = getMonday(weeklyDate);
+        const dayNames = ['월','화','수','목','금','토','일'];
+        container.innerHTML = '';
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(mon); d.setDate(mon.getDate() + i);
+            const key = getInnerKeyForDate(d);
+            const hasData = !!localStorage.getItem(key);
+            const isToday = d.getTime() === (() => { const n = new Date(); n.setHours(0,0,0,0); return n.getTime(); })();
+            const isSelected = innerSelectedDate && d.getTime() === innerSelectedDate.getTime();
+            const btn = document.createElement('button');
+            btn.style.cssText = `
+                display:flex; flex-direction:column; align-items:center; gap:2px;
+                padding:6px 10px; border-radius:12px; cursor:pointer; font-family:inherit;
+                font-size:0.78rem; font-weight:700; transition: all 0.15s;
+                border: 2px solid ${isSelected ? 'var(--accent2)' : hasData ? 'var(--green)' : 'var(--border)'};
+                background: ${isSelected ? 'rgba(244,162,97,0.2)' : hasData ? 'rgba(100,200,130,0.12)' : 'var(--surface2)'};
+                color: ${isSelected ? 'var(--accent2)' : hasData ? 'var(--green)' : isToday ? 'var(--text)' : 'var(--text-muted)'};
+                ${isToday ? 'box-shadow: 0 0 0 1px rgba(255,255,255,0.1);' : ''}
+            `;
+            btn.innerHTML = `
+                <span>${dayNames[i]}</span>
+                <span style="font-size:0.62rem; font-weight:400; opacity:0.7;">${d.getMonth()+1}/${d.getDate()}</span>
+                ${hasData ? '<span style="width:5px;height:5px;border-radius:50%;background:var(--green);margin-top:1px;"></span>' : '<span style="width:5px;height:5px;"></span>'}
+            `;
+            btn.onclick = () => selectInnerDay(d);
+            container.appendChild(btn);
+        }
+    }
+
+    function selectInnerDay(d) {
+        innerSelectedDate = d;
+        renderWeekDayButtons();
+        loadInnerForDay(d);
+        const label = document.getElementById('innerSelectedDateLabel');
+        const isToday = d.getTime() === (() => { const n = new Date(); n.setHours(0,0,0,0); return n.getTime(); })();
+        label.textContent = d.toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'long'}) + (isToday ? ' · 오늘' : '');
+        label.style.color = 'var(--accent2)';
+    }
+
+    function getInnerKeyForDate(d) {
+        return 'inner2_' + d.toLocaleDateString('ko-KR').replace(/\s/g,'');
+    }
+    function getWeeklyKey() {
+        const mon = getMonday(weeklyDate);
+        return 'weekly2_' + mon.toLocaleDateString('ko-KR').replace(/\s/g,'');
+    }
+
+    function loadInnerForDay(d) {
+        if (!d) {
+            ['selfProblem','parentVoice','altView'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('truthScore').value = 30;
+            document.getElementById('truthVal').textContent = '30%';
+            document.getElementById('innerSelectedDateLabel').textContent = '← 요일을 선택하면 그날의 기록을 볼 수 있어요';
+            document.getElementById('innerSelectedDateLabel').style.color = 'var(--text-muted)';
+            return;
+        }
+        const raw = localStorage.getItem(getInnerKeyForDate(d));
+        const data = raw ? JSON.parse(raw) : {};
+        document.getElementById('selfProblem').value = data.selfProblem || '';
+        document.getElementById('parentVoice').value = data.parentVoice || '';
+        document.getElementById('altView').value = data.altView || '';
+        document.getElementById('truthScore').value = data.truth || 30;
+        document.getElementById('truthVal').textContent = (data.truth || 30) + '%';
+    }
+
+    function loadWeeklySharedData() {
+        const raw = localStorage.getItem(getWeeklyKey());
+        const d = raw ? JSON.parse(raw) : {};
+        document.getElementById('goodNote').value = d.goodNote || '';
+        document.getElementById('nextNote').value = d.nextNote || '';
+        document.getElementById('dangerScore').value = d.danger || 50;
+        document.getElementById('val1').textContent = (d.danger || 50) + '%';
+        document.getElementById('changeScore').value = d.change || 50;
+        document.getElementById('val2').textContent = (d.change || 50) + '%';
+        document.getElementById('calmScore').value = d.calm || 50;
+        document.getElementById('val3').textContent = (d.calm || 50) + '%';
+        document.getElementById('dangerSelf').value = d.dangerSelf || 50;
+        document.getElementById('dangerSelfVal').textContent = (d.dangerSelf || 50) + '%';
+        document.getElementById('changeSelf').value = d.changeSelf || 50;
+        document.getElementById('changeSelfVal').textContent = (d.changeSelf || 50) + '%';
+    }
+
+    // autosave inner diary for the selected day
+    const _autoSaveInnerDebounced = debounce(() => {
+        if (!innerSelectedDate) return;
+        const data = {
+            type: 'inner', date: innerSelectedDate.toLocaleDateString('ko-KR'),
+            selfProblem: document.getElementById('selfProblem').value,
+            parentVoice: document.getElementById('parentVoice').value,
+            altView: document.getElementById('altView').value,
+            truth: document.getElementById('truthScore').value,
+        };
+        localStorage.setItem(getInnerKeyForDate(innerSelectedDate), JSON.stringify(data));
+        renderWeekDayButtons(); // refresh dot indicators
+        showAutoSaved('weeklyAutoSave1');
+    }, 600);
+
+    // autosave weekly shared (reflection + indicators)
+    const _autoSaveWeeklyDebounced = debounce(() => {
+        const data = {
+            type: 'weekly', date: getMonday(weeklyDate).toLocaleDateString('ko-KR'),
+            goodNote: document.getElementById('goodNote').value,
+            nextNote: document.getElementById('nextNote').value,
+            danger: document.getElementById('dangerScore').value,
+            change: document.getElementById('changeScore').value,
+            calm: document.getElementById('calmScore').value,
+            dangerSelf: document.getElementById('dangerSelf').value,
+            changeSelf: document.getElementById('changeSelf').value,
+        };
+        localStorage.setItem(getWeeklyKey(), JSON.stringify(data));
+        ['weeklyAutoSave2','weeklyAutoSave3'].forEach(id => showAutoSaved(id));
+    }, 600);
+
+    function autoSaveWeekly() { _autoSaveWeeklyDebounced(); }
+
+    function bindWeeklyAutoSave() {
+        ['selfProblem','parentVoice','altView'].forEach(id => {
+            document.getElementById(id).oninput = () => _autoSaveInnerDebounced();
+        });
+        ['goodNote','nextNote'].forEach(id => {
+            document.getElementById(id).oninput = autoSaveWeekly;
+        });
+    }
+
+    // slider for inner truth score
+    document.addEventListener('input', e => {
+        if (e.target.id === 'truthScore') _autoSaveInnerDebounced();
+    });
+
+    // selectDay kept as no-op (replaced by selectInnerDay)
+    function selectDay(btn, group) {}
+
+    // ── GRATITUDE ──
+    function changeGratitudeDay(delta) {
+        gratitudeDate.setDate(gratitudeDate.getDate() + delta);
+        renderGratitudeHeader();
+        loadGratitudeData();
+    }
+    function renderGratitudeHeader() {
+        const h = makeDateNavHeader(gratitudeDate);
+        document.getElementById('gratitudeDateLabel').textContent = h.label;
+        document.getElementById('gratitudeDateLabel').style.color = h.color;
+        document.getElementById('gratitudeDayLabel').textContent = h.sub;
+    }
+    function getGratitudeKey() { return 'gratitude2_' + gratitudeDate.toLocaleDateString('ko-KR').replace(/\s/g,''); }
+    function getGratitudeDay() {
+        return Object.keys(localStorage).filter(k => k.startsWith('gratitude2_')).length + 1;
+    }
+    function loadGratitudeData() {
+        const raw = localStorage.getItem(getGratitudeKey());
+        const d = raw ? JSON.parse(raw) : {};
+        ['g1','g2','g3','g4','g5'].forEach(id => document.getElementById(id).value = d[id] || '');
+        const total = Object.keys(localStorage).filter(k => k.startsWith('gratitude2_')).length;
+        document.getElementById('gratitudeDayBadge').textContent = total + '일차';
+    }
+    const _autoSaveGratitudeDebounced = debounce(() => {
+        const isNew = !localStorage.getItem(getGratitudeKey());
+        const data = {
+            type: 'gratitude', date: gratitudeDate.toLocaleDateString('ko-KR'),
+            g1: document.getElementById('g1').value,
+            g2: document.getElementById('g2').value,
+            g3: document.getElementById('g3').value,
+            g4: document.getElementById('g4').value,
+            g5: document.getElementById('g5').value,
+        };
+        const hasContent = Object.values(data).some((v,i) => i > 1 && v.trim());
+        if (!hasContent) return;
+        localStorage.setItem(getGratitudeKey(), JSON.stringify(data));
+        if (isNew) { const t = Object.keys(localStorage).filter(k => k.startsWith('gratitude2_')).length; document.getElementById('gratitudeDayBadge').textContent = t + '일차'; }
+        showAutoSaved('gratitudeAutoSave');
+    }, 600);
+    function bindGratitudeAutoSave() {
+        ['g1','g2','g3','g4','g5'].forEach(id => { document.getElementById(id).oninput = _autoSaveGratitudeDebounced; });
+    }
+
+    // ── EMOTION ──
+    function changeEmotionDay(delta) {
+        emotionDate.setDate(emotionDate.getDate() + delta);
+        renderEmotionHeader();
+        loadEmotionData();
+    }
+    function renderEmotionHeader() {
+        const h = makeDateNavHeader(emotionDate);
+        document.getElementById('emotionDateLabel').textContent = h.label;
+        document.getElementById('emotionDateLabel').style.color = h.color;
+        document.getElementById('emotionDayLabel').textContent = h.sub;
+    }
+    function getEmotionKey() { return 'emotion2_' + emotionDate.toLocaleDateString('ko-KR').replace(/\s/g,''); }
+    function getEmotionDay() {
+        return Object.keys(localStorage).filter(k => k.startsWith('emotion2_')).length + 1;
+    }
+    function loadEmotionData() {
+        const raw = localStorage.getItem(getEmotionKey());
+        const d = raw ? JSON.parse(raw) : {};
+        ['ePraise','e1','e2','e3','e4','e5'].forEach(id => document.getElementById(id).value = d[id] || '');
+        const total = Object.keys(localStorage).filter(k => k.startsWith('emotion2_')).length;
+        document.getElementById('emotionDayBadge').textContent = total + '일차';
+    }
+    const _autoSaveEmotionDebounced = debounce(() => {
+        const isNew = !localStorage.getItem(getEmotionKey());
+        const data = {
+            type: 'emotion', date: emotionDate.toLocaleDateString('ko-KR'),
+            ePraise: document.getElementById('ePraise').value,
+            e1: document.getElementById('e1').value,
+            e2: document.getElementById('e2').value,
+            e3: document.getElementById('e3').value,
+            e4: document.getElementById('e4').value,
+            e5: document.getElementById('e5').value,
+        };
+        const hasContent = ['e1','e2','e3','e4','e5','ePraise'].some(id => data[id].trim());
+        if (!hasContent) return;
+        localStorage.setItem(getEmotionKey(), JSON.stringify(data));
+        if (isNew) { const t = Object.keys(localStorage).filter(k => k.startsWith('emotion2_')).length; document.getElementById('emotionDayBadge').textContent = t + '일차'; }
+        showAutoSaved('emotionAutoSave');
+    }, 600);
+    function bindEmotionAutoSave() {
+        ['ePraise','e1','e2','e3','e4','e5'].forEach(id => { document.getElementById(id).oninput = _autoSaveEmotionDebounced; });
+    }
+
+    // Slider (kept for compatibility)
+    function updateSlider(id, valId) {
+        document.getElementById(valId).textContent = document.getElementById(id).value + '%';
+    }
+
+    // Save inner (kept as stub, replaced by autoSaveWeekly)
+    function saveInner() { autoSaveWeekly(); }
+    function saveWeekly() { autoSaveWeekly(); }
+    function saveReflection() { autoSaveWeekly(); }
+    function saveGratitude() { _autoSaveGratitudeDebounced(); }
+    function saveEmotion() { _autoSaveEmotionDebounced(); }
+
+    // Render history — grouped by date
+    function renderHistory() {
+        const list = document.getElementById('historyList');
+        const prefixes = ['daily_', 'weekly_', 'inner_', 'reflection_', 'gratitude_', 'emotion_'];
+        const keys = Object.keys(localStorage).filter(k => prefixes.some(p => k.startsWith(p)));
+        keys.sort().reverse();
+
+        if (keys.length === 0) {
+            list.innerHTML = '<div class="history-empty">아직 기록이 없어요.<br>오늘 첫 기록을 남겨보세요!</div>';
+            return;
+        }
+
+        const choiceLabel = { stop: '🖐 멈췄다', push: '🔥 밀어붙였다', both: '↔ 반반' };
+
+        // Group by date
+        const groups = {};
+        keys.forEach(k => {
+            const d = JSON.parse(localStorage.getItem(k));
+            const date = d.date || '날짜 없음';
+            if (!groups[date]) groups[date] = [];
+            groups[date].push({ key: k, data: d });
+        });
+
+        // Sort dates descending
+        const sortedDates = Object.keys(groups).sort((a, b) => {
+            const pa = a.split('.').map(Number);
+            const pb = b.split('.').map(Number);
+            for (let i = 0; i < 3; i++) {
+                if ((pb[i]||0) !== (pa[i]||0)) return (pb[i]||0) - (pa[i]||0);
+            }
+            return 0;
+        });
+
+        function renderEntry(item) {
+            const d = item.data;
+            if (d.type === 'daily') {
+                return `<div class="entry-card type-daily">
+                    <div class="entry-type" style="color: var(--accent);">
+                        🔥 불 감지 기록
+                        ${d.time ? `<span class="entry-time">${d.time}</span>` : ''}
+                    </div>
+                    ${d.fire ? `<div class="entry-row"><span class="label">속이 뜨거웠던 순간</span>${d.fire}</div>` : ''}
+                    ${d.proof ? `<div class="entry-row"><span class="label">무엇을 증명하려 했나</span>${d.proof}</div>` : ''}
+                    ${d.choice ? `<div class="entry-chips">
+                        <span class="chip orange">${choiceLabel[d.choice]}</span>
+                        ${d.choiceNote ? `<span class="chip">${d.choiceNote}</span>` : ''}
+                    </div>` : ''}
+                </div>`;
+            } else if (d.type === 'inner') {
+                return `<div class="entry-card type-inner">
+                    <div class="entry-type" style="color: #6495ed;">
+                        🪞 내면 탐색
+                        ${d.days ? `<span class="entry-time">${d.days}</span>` : ''}
+                    </div>
+                    ${d.selfProblem ? `<div class="entry-row"><span class="label">나를 문제라고 느낀 순간</span>${d.selfProblem}</div>` : ''}
+                    ${d.parentVoice ? `<div class="entry-row"><span class="label">부모 목소리</span>${d.parentVoice}</div>` : ''}
+                    <div class="entry-chips">
+                        <span class="chip red">사실 확률 ${d.truth}%</span>
+                        ${d.altView ? `<span class="chip">${d.altView}</span>` : ''}
+                    </div>
+                </div>`;
+            } else if (d.type === 'emotion') {
+                return `<div class="entry-card" style="border-left-color: #ff6987;">
+                    <div class="entry-type" style="color: #ff6987;">
+                        💗 감정 일기
+                        ${d.dayNum ? `<span class="entry-time">${d.dayNum}일차</span>` : ''}
+                    </div>
+                    ${d.ePraise ? `<div class="entry-row"><span class="label">나에게 칭찬</span>${d.ePraise}</div>` : ''}
+                    ${d.e1 ? `<div class="entry-row"><span class="label">사건</span>${d.e1}</div>` : ''}
+                    ${d.e2 ? `<div class="entry-row"><span class="label">감정</span>${d.e2}</div>` : ''}
+                    ${d.e3 ? `<div class="entry-row"><span class="label">욕구</span>${d.e3}</div>` : ''}
+                    ${d.e4 ? `<div class="entry-row"><span class="label">셀프토크</span>${d.e4}</div>` : ''}
+                    ${d.e5 ? `<div class="entry-row"><span class="label">행동</span>${d.e5}</div>` : ''}
+                </div>`;
+            } else if (d.type === 'gratitude') {
+                return `<div class="entry-card" style="border-left-color: var(--accent2);">
+                    <div class="entry-type" style="color: var(--accent2);">
+                        🙏 감사 일기
+                        ${d.dayNum ? `<span class="entry-time">${d.dayNum}일차</span>` : ''}
+                    </div>
+                    ${d.g1 ? `<div class="entry-row"><span class="label">나 자신에게</span>${d.g1}</div>` : ''}
+                    ${d.g2 ? `<div class="entry-row"><span class="label">누군가에게</span>${d.g2}</div>` : ''}
+                    ${d.g3 ? `<div class="entry-row"><span class="label">삶에 감사</span>${d.g3}</div>` : ''}
+                    ${d.g4 ? `<div class="entry-row"><span class="label">배우거나 깨달은 것</span>${d.g4}</div>` : ''}
+                    ${d.g5 ? `<div class="entry-row"><span class="label">꿈을 이루는 감사</span>${d.g5}</div>` : ''}
+                </div>`;
+            } else if (d.type === 'reflection') {
+                return `<div class="entry-card type-reflection">
+                    <div class="entry-type" style="color: var(--green);">💬 이번 주 성찰</div>
+                    ${d.good ? `<div class="entry-row"><span class="label">잘 지킨 것</span>${d.good}</div>` : ''}
+                    ${d.next ? `<div class="entry-row"><span class="label">다음 주 다짐</span>${d.next}</div>` : ''}
+                </div>`;
+            } else {
+                return `<div class="entry-card type-weekly">
+                    <div class="entry-type" style="color: var(--accent2);">📊 지표 기록</div>
+                    <div class="entry-chips">
+                        <span class="chip red">위험도 ${d.danger}%</span>
+                        <span class="chip green">변화도 ${d.change}%</span>
+                        <span class="chip orange">평온도 ${d.calm}%</span>
+                    </div>
+                    <div class="entry-chips" style="margin-top: 4px;">
+                        <span class="chip red">위험한 사람 같다 ${d.dangerSelf}%</span>
+                        <span class="chip green">다를 수 있다 ${d.changeSelf}%</span>
+                    </div>
+                </div>`;
+            }
+        }
+
+        list.innerHTML = sortedDates.map((date, i) => {
+            const entries = groups[date];
+            const groupId = 'dg_' + i;
+            const entriesHtml = entries.map(renderEntry).join('');
+            return `<div class="date-group">
+                <div class="date-group-header" onclick="toggleGroup('${groupId}')">
+                    <span class="date-label">${date}</span>
+                    <span class="date-line"></span>
+                    <span class="date-toggle" id="toggle_${groupId}">▾</span>
+                </div>
+                <div class="date-entries" id="${groupId}">
+                    ${entriesHtml}
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    function toggleGroup(id) {
+        const el = document.getElementById(id);
+        const arrow = document.getElementById('toggle_' + id);
+        if (el.style.display === 'none') {
+            el.style.display = 'flex';
+            arrow.classList.remove('collapsed');
+        } else {
+            el.style.display = 'none';
+            arrow.classList.add('collapsed');
+        }
+    }
+
+    // Clear history
+    function clearHistory() {
+        if (!confirm('모든 기록을 삭제할까요?')) return;
+        Object.keys(localStorage).filter(k => k.startsWith('daily_') || k.startsWith('weekly_') || k.startsWith('declare_') || k.startsWith('inner_') || k.startsWith('reflection_') || k.startsWith('gratitude_') || k.startsWith('emotion_')).forEach(k => localStorage.removeItem(k));
+        renderHistory();
+        showToast('기록이 삭제되었습니다.');
+    }
+
+    // ─── Daily Todo List ───────────────────────────────────────
+    let mustItems = [], mayItems = [];
+
+    function renderTodoList(type) {
+        const items = type === 'must' ? mustItems : mayItems;
+        const el = document.getElementById(type === 'must' ? 'mustList' : 'mayList');
+        el.innerHTML = items.map((item, i) => `
+            <div style="display:flex; align-items:center; gap:6px; padding:5px 0; border-bottom:1px solid var(--border);">
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleTodo('${type}',${i})"
+                    style="width:15px; height:15px; accent-color:var(--green); cursor:pointer; flex-shrink:0;">
+                <span style="font-size:0.8rem; flex:1; ${item.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${item.text}</span>
+                <button onclick="removeTodo('${type}',${i})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.8rem; padding:0 2px;">✕</button>
+            </div>`).join('');
+    }
+
+    // ── Inline input helper ──────────────────────────────────
+    // Shows an inline input row inside a container, confirms on Enter or blur
+    function showInlineInput(containerId, placeholder, onConfirm) {
+        // remove existing inline input if any
+        const existing = document.getElementById('inline-input-row');
+        if (existing) existing.remove();
+
+        const container = document.getElementById(containerId);
+        const row = document.createElement('div');
+        row.id = 'inline-input-row';
+        row.style.cssText = 'display:flex; gap:6px; align-items:center; padding:6px 0; border-bottom:1px solid var(--border);';
+
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.placeholder = placeholder;
+        inp.style.cssText = 'flex:1; background:var(--surface2); border:1px solid var(--accent2); border-radius:8px; padding:8px 10px; color:var(--text); font-family:inherit; font-size:0.82rem; outline:none;';
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.textContent = '✓';
+        confirmBtn.style.cssText = 'background:var(--green); border:none; border-radius:8px; color:#fff; padding:7px 12px; cursor:pointer; font-size:0.88rem; flex-shrink:0;';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = '✕';
+        cancelBtn.style.cssText = 'background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text-muted); padding:7px 10px; cursor:pointer; font-size:0.82rem; flex-shrink:0;';
+
+        function confirm() {
+            const val = inp.value.trim();
+            row.remove();
+            if (val) onConfirm(val);
+        }
+        function cancel() { row.remove(); }
+
+        confirmBtn.onclick = confirm;
+        cancelBtn.onclick = cancel;
+        inp.onkeydown = e => { if (e.key === 'Enter') confirm(); if (e.key === 'Escape') cancel(); };
+
+        row.appendChild(inp);
+        row.appendChild(confirmBtn);
+        row.appendChild(cancelBtn);
+        container.appendChild(row);
+        inp.focus();
+    }
+
+    function addTodoItem(type) {
+        const listId = type === 'must' ? 'mustList' : 'mayList';
+        const ph = type === 'must' ? '반드시 해야 할 일...' : '여유있게 할 수 있는 일...';
+        showInlineInput(listId, ph, val => {
+            if (type === 'must') mustItems.push({text: val, done: false});
+            else mayItems.push({text: val, done: false});
+            renderTodoList(type);
+            autoSaveDailyTodo();
+        });
+    }
+
+    function toggleTodo(type, i) {
+        const arr = type === 'must' ? mustItems : mayItems;
+        arr[i].done = !arr[i].done;
+        renderTodoList(type);
+        autoSaveDailyTodo();
+    }
+
+    function removeTodo(type, i) {
+        if (type === 'must') mustItems.splice(i, 1);
+        else mayItems.splice(i, 1);
+        renderTodoList(type);
+        autoSaveDailyTodo();
+    }
+
+    const autoSaveDailyTodo = debounce(() => {
+        const data = getPlannerData();
+        data.affirmation = document.getElementById('dailyAffirmation').value;
+        data.mustItems = mustItems;
+        data.mayItems = mayItems;
+        savePlannerData(data);
+        showAutoSaved('dailyTodoAutoSave');
+    }, 600);
+
+    function loadDailyTodo(data) {
+        document.getElementById('dailyAffirmation').value = data.affirmation || '';
+        mustItems = data.mustItems || [];
+        mayItems = data.mayItems || [];
+        renderTodoList('must');
+        renderTodoList('may');
+        document.getElementById('dailyAffirmation').oninput = autoSaveDailyTodo;
+    }
+
+    // ── Goal List with per-item reward % ─────────────────────
+    function showGoalInput(listId, inputAreaId, onConfirm) {
+        const area = document.getElementById(inputAreaId);
+        // toggle off if already open
+        if (area.innerHTML !== '') { area.innerHTML = ''; return; }
+
+        const pct = { value: 0 };
+        area.innerHTML = `
+            <div style="background:var(--surface2); border:1px solid var(--accent2); border-radius:12px; padding:14px; margin:8px 0;">
+                <input id="_goalTextInp" type="text" placeholder="목표 내용을 입력하세요..."
+                    style="width:100%; background:transparent; border:none; border-bottom:1px solid var(--border); outline:none; color:var(--text); font-family:inherit; font-size:0.85rem; padding:6px 0 8px; margin-bottom:14px; box-sizing:border-box;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+                    <span style="font-size:0.75rem; color:var(--text-muted);">🏆 보상 수치</span>
+                    <span id="_goalPctLabel" style="font-size:0.85rem; font-weight:700; color:var(--green);">0%</span>
+                </div>
+                <input type="range" id="_goalPctInp" min="0" max="100" value="0"
+                    style="width:100%; margin-bottom:12px;"
+                    oninput="document.getElementById('_goalPctLabel').textContent=this.value+'%'">
+                <div style="display:flex; gap:8px;">
+                    <button id="_goalConfirmBtn" style="flex:1; background:var(--green); border:none; border-radius:8px; color:#fff; padding:9px; cursor:pointer; font-size:0.85rem; font-weight:700;">✓ 완료</button>
+                    <button onclick="document.getElementById('${inputAreaId}').innerHTML=''" style="background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text-muted); padding:9px 14px; cursor:pointer; font-size:0.85rem;">취소</button>
+                </div>
+            </div>`;
+
+        document.getElementById('_goalTextInp').focus();
+        document.getElementById('_goalConfirmBtn').onclick = () => {
+            const text = document.getElementById('_goalTextInp').value.trim();
+            const pct = parseInt(document.getElementById('_goalPctInp').value);
+            area.innerHTML = '';
+            if (text) onConfirm(text, pct);
+        };
+        document.getElementById('_goalTextInp').onkeydown = e => {
+            if (e.key === 'Enter') document.getElementById('_goalConfirmBtn').click();
+            if (e.key === 'Escape') area.innerHTML = '';
+        };
+    }
+
+    function renderGoalList(listId, items, toggleFn, removeFn) {
+        const el = document.getElementById(listId);
+        if (!items.length) {
+            el.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); padding:8px 0 4px;">목표를 추가해보세요 🎯</div>';
+            return;
+        }
+        el.innerHTML = items.map((item, i) => {
+            const pctColor = item.pct >= 80 ? 'var(--green)' : item.pct >= 40 ? 'var(--accent2)' : 'var(--accent)';
+            return `<div style="display:flex; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid var(--border);">
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="${toggleFn}(${i})"
+                    style="width:16px; height:16px; accent-color:var(--green); cursor:pointer; flex-shrink:0;">
+                <span style="font-size:0.83rem; flex:1; ${item.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${item.text}</span>
+                <span style="font-size:0.78rem; font-weight:700; color:${pctColor}; background:${pctColor}22; border-radius:20px; padding:2px 10px; white-space:nowrap; flex-shrink:0;">${item.pct}%</span>
+                <button onclick="${removeFn}(${i})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.8rem; padding:0 2px; flex-shrink:0;">✕</button>
+            </div>`;
+        }).join('');
+    }
+
+    // Monthly Goal List
+    let monthlyGoalItems = [];
+    function renderMonthlyGoalList() { renderGoalList('monthlyGoalList', monthlyGoalItems, 'toggleMonthlyGoal', 'removeMonthlyGoal'); }
+    function addMonthlyGoal() {
+        showGoalInput('monthlyGoalList', 'monthlyGoalInputArea', (text, pct) => {
+            monthlyGoalItems.push({text, pct, done: false});
+            renderMonthlyGoalList(); autoSaveMonthly();
+        });
+    }
+    function toggleMonthlyGoal(i) { monthlyGoalItems[i].done = !monthlyGoalItems[i].done; renderMonthlyGoalList(); autoSaveMonthly(); }
+    function removeMonthlyGoal(i) { monthlyGoalItems.splice(i,1); renderMonthlyGoalList(); autoSaveMonthly(); }
+
+    // Weekly Plan Goal List
+    let weekplanGoalItems = [];
+    function renderWeekplanGoalList() { renderGoalList('weekplanGoalList', weekplanGoalItems, 'toggleWeekplanGoal', 'removeWeekplanGoal'); }
+    function addWeekplanGoal() {
+        showGoalInput('weekplanGoalList', 'weekplanGoalInputArea', (text, pct) => {
+            weekplanGoalItems.push({text, pct, done: false});
+            renderWeekplanGoalList(); autoSaveWeekPlan();
+        });
+    }
+    function toggleWeekplanGoal(i) { weekplanGoalItems[i].done = !weekplanGoalItems[i].done; renderWeekplanGoalList(); autoSaveWeekPlan(); }
+    function removeWeekplanGoal(i) { weekplanGoalItems.splice(i,1); renderWeekplanGoalList(); autoSaveWeekPlan(); }
+
+    // ─── Monthly Plan ──────────────────────────────────────────
+    let monthlyDate = new Date();
+
+    function changeMonth(delta) {
+        monthlyDate.setMonth(monthlyDate.getMonth() + delta);
+        renderMonthlyHeader();
+        loadMonthlyData();
+    }
+
+    function renderMonthlyHeader() {
+        const y = monthlyDate.getFullYear();
+        const m = monthlyDate.getMonth() + 1;
+        document.getElementById('monthlyLabel').textContent = `${y}년 ${m}월`;
+    }
+
+    function getMonthlyKey() {
+        return 'monthly_' + monthlyDate.getFullYear() + '_' + (monthlyDate.getMonth() + 1);
+    }
+
+    function loadMonthlyData() {
+        const raw = localStorage.getItem(getMonthlyKey());
+        const d = raw ? JSON.parse(raw) : {};
+        document.getElementById('monthlyAffirm').value = d.affirm || '';
+        monthlyGoalItems = d.goalItems || [];
+        renderMonthlyGoalList();
+        monthlyMustItems = d.mustItems || [];
+        renderMonthlyMust();
+        buildMonthlyCalendar(d.calData || {});
+    }
+
+    const autoSaveMonthly = debounce(() => {
+        const d = {
+            affirm: document.getElementById('monthlyAffirm').value,
+            goalItems: monthlyGoalItems,
+            mustItems: monthlyMustItems,
+            calData: collectCalData(),
+        };
+        localStorage.setItem(getMonthlyKey(), JSON.stringify(d));
+        showAutoSaved('monthlyAutoSave');
+    }, 600);
+
+    function bindMonthlyAutoSave() {
+        document.getElementById('monthlyAffirm').oninput = autoSaveMonthly;
+    }
+
+    function collectCalData() {
+        const result = {};
+        document.querySelectorAll('.cal-cell-input').forEach(inp => {
+            if (inp.value.trim()) result[inp.dataset.day] = inp.value;
+        });
+        return result;
+    }
+
+    function buildMonthlyCalendar(calData) {
+        const container = document.getElementById('monthlyCalendar');
+        const y = monthlyDate.getFullYear();
+        const m = monthlyDate.getMonth();
+        const firstDay = new Date(y, m, 1).getDay(); // 0=Sun
+        const daysInMonth = new Date(y, m + 1, 0).getDate();
+        const dayNames = ['일','월','화','수','목','금','토'];
+
+        let html = `<div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">`;
+        dayNames.forEach((dn, i) => {
+            const c = i === 0 ? '#e05c5c' : i === 6 ? '#5b9bd5' : 'var(--text-muted)';
+            html += `<div style="text-align:center; font-size:0.68rem; font-weight:700; color:${c}; padding:4px 0;">${dn}</div>`;
+        });
+        html += `</div><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px;">`;
+
+        for (let i = 0; i < firstDay; i++) html += `<div></div>`;
+        const today = new Date(); today.setHours(0,0,0,0);
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(y, m, day);
+            const dow = date.getDay();
+            const isToday = date.getTime() === today.getTime();
+            const numColor = dow === 0 ? '#e05c5c' : dow === 6 ? '#5b9bd5' : 'var(--text)';
+            html += `<div style="border:1px solid var(--border); border-radius:6px; padding:3px; background:${isToday ? 'rgba(100,200,130,0.08)' : 'var(--surface2)'}; ${isToday ? 'border-color:var(--green);' : ''}">
+                <div style="font-size:0.65rem; font-weight:700; color:${isToday ? 'var(--green)' : numColor}; margin-bottom:2px; text-align:right;">${day}</div>
+                <textarea class="cal-cell-input" data-day="${day}" rows="2" style="width:100%; background:transparent; border:none; outline:none; color:var(--text); font-size:0.62rem; resize:none; overflow:hidden; min-height:28px; line-height:1.3; padding:0; font-family:inherit;" placeholder="" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'; autoSaveMonthly();">${calData[day] || ''}</textarea>
+            </div>`;
+        }
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+
+    let monthlyMustItems = [];
+    function renderMonthlyMust() {
+        const el = document.getElementById('monthlyMustList');
+        el.innerHTML = monthlyMustItems.map((item, i) => `
+            <div style="display:flex; align-items:center; gap:6px; padding:6px 0; border-bottom:1px solid var(--border);">
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleMonthlyMust(${i})"
+                    style="width:15px; height:15px; accent-color:var(--green); cursor:pointer; flex-shrink:0;">
+                <span style="font-size:0.82rem; flex:1; ${item.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${item.text}</span>
+                <button onclick="removeMonthlyMust(${i})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.8rem;">✕</button>
+            </div>`).join('');
+    }
+    function addMonthlyMust() {
+        showInlineInput('monthlyMustList', '이번 달 해야 할 일...', val => {
+            monthlyMustItems.push({text: val, done: false});
+            renderMonthlyMust(); autoSaveMonthly();
+        });
+    }
+    function toggleMonthlyMust(i) { monthlyMustItems[i].done = !monthlyMustItems[i].done; renderMonthlyMust(); autoSaveMonthly(); }
+    function removeMonthlyMust(i) { monthlyMustItems.splice(i,1); renderMonthlyMust(); autoSaveMonthly(); }
+
+    // ─── Weekly Plan ───────────────────────────────────────────
+    let weekPlanDate = new Date(); weekPlanDate.setHours(0,0,0,0);
+    let weekplanMustItems = [];
+
+    function changeWeekPlan(delta) {
+        weekPlanDate.setDate(weekPlanDate.getDate() + delta * 7);
+        renderWeekPlanHeader();
+        loadWeekPlanData();
+    }
+
+    function getWeekPlanMonday(d) {
+        const date = new Date(d);
+        const day = date.getDay();
+        const diff = day === 0 ? -6 : 1 - day;
+        date.setDate(date.getDate() + diff);
+        date.setHours(0,0,0,0);
+        return date;
+    }
+
+    function renderWeekPlanHeader() {
+        const mon = getWeekPlanMonday(weekPlanDate);
+        const sun = new Date(mon); sun.setDate(sun.getDate() + 6);
+        const fmt = d => d.toLocaleDateString('ko-KR', {month:'long', day:'numeric'});
+        document.getElementById('weekplanLabel').textContent = `${mon.getFullYear()}년 ${fmt(mon)} ~ ${fmt(sun)}`;
+        const now = new Date(); now.setHours(0,0,0,0);
+        const nowMon = getWeekPlanMonday(now);
+        if (mon.getTime() === nowMon.getTime()) {
+            document.getElementById('weekplanLabel').style.color = 'var(--green)';
+            document.getElementById('weekplanSub').textContent = '이번 주';
+        } else if (mon > nowMon) {
+            document.getElementById('weekplanLabel').style.color = 'var(--accent2)';
+            document.getElementById('weekplanSub').textContent = '다음 주';
+        } else {
+            document.getElementById('weekplanLabel').style.color = 'var(--text-muted)';
+            document.getElementById('weekplanSub').textContent = Math.round((nowMon-mon)/(7*86400000)) + '주 전';
+        }
+    }
+
+    function getWeekPlanKey() {
+        const mon = getWeekPlanMonday(weekPlanDate);
+        return 'weekplan_' + mon.toLocaleDateString('ko-KR').replace(/\s/g,'');
+    }
+
+    function loadWeekPlanData() {
+        const raw = localStorage.getItem(getWeekPlanKey());
+        const d = raw ? JSON.parse(raw) : {};
+        document.getElementById('weekplanAffirm').value = d.affirm || '';
+        weekplanGoalItems = d.goalItems || [];
+        renderWeekplanGoalList();
+        weekplanMustItems = d.mustItems || [];
+        renderWeekplanMust();
+        buildWeekPlanDays(d.dayData || {});
+    }
+
+    const autoSaveWeekPlan = debounce(() => {
+        const d = {
+            affirm: document.getElementById('weekplanAffirm').value,
+            goalItems: weekplanGoalItems,
+            mustItems: weekplanMustItems,
+            dayData: collectWeekDayData(),
+        };
+        localStorage.setItem(getWeekPlanKey(), JSON.stringify(d));
+        showAutoSaved('weekplanAutoSave');
+    }, 600);
+
+    function collectWeekDayData() {
+        const result = {};
+        document.querySelectorAll('.weekday-input').forEach(inp => {
+            result[inp.dataset.dayname] = inp.value;
+        });
+        return result;
+    }
+
+    function buildWeekPlanDays(dayData) {
+        const mon = getWeekPlanMonday(weekPlanDate);
+        const dayNames = ['월','화','수','목','금','토','일'];
+        let html = '';
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(mon); d.setDate(mon.getDate() + i);
+            const label = `[${dayNames[i]}] ${d.getMonth()+1}/${d.getDate()}`;
+            const isToday = d.setHours(0,0,0,0) === new Date().setHours(0,0,0,0);
+            html += `<div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border);">
+                <div style="font-size:0.78rem; font-weight:700; min-width:70px; color:${isToday ? 'var(--green)' : 'var(--text-muted)'};">${label}</div>
+                <textarea class="weekday-input" data-dayname="${dayNames[i]}" rows="1" style="flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:7px 10px; color:var(--text); font-family:inherit; font-size:0.8rem; outline:none; resize:none; overflow:hidden;" oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px'; autoSaveWeekPlan();">${dayData[dayNames[i]] || ''}</textarea>
+            </div>`;
+        }
+        document.getElementById('weekplanDays').innerHTML = html;
+    }
+
+    function renderWeekplanMust() {
+        const el = document.getElementById('weekplanMustList');
+        el.innerHTML = weekplanMustItems.map((item, i) => `
+            <div style="display:flex; align-items:center; gap:6px; padding:6px 0; border-bottom:1px solid var(--border);">
+                <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleWeekplanMust(${i})"
+                    style="width:15px; height:15px; accent-color:var(--green); cursor:pointer; flex-shrink:0;">
+                <span style="font-size:0.82rem; flex:1; ${item.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${item.text}</span>
+                <button onclick="removeWeekplanMust(${i})" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.8rem;">✕</button>
+            </div>`).join('');
+    }
+    function addWeekplanMust() {
+        showInlineInput('weekplanMustList', '이번 주 해야 할 일...', val => {
+            weekplanMustItems.push({text: val, done: false});
+            renderWeekplanMust(); autoSaveWeekPlan();
+        });
+    }
+    function toggleWeekplanMust(i) { weekplanMustItems[i].done = !weekplanMustItems[i].done; renderWeekplanMust(); autoSaveWeekPlan(); }
+    function removeWeekplanMust(i) { weekplanMustItems.splice(i,1); renderWeekplanMust(); autoSaveWeekPlan(); }
+
+    function bindWeekPlanAutoSave() {
+        document.getElementById('weekplanAffirm').oninput = autoSaveWeekPlan;
+    }
+
+    // ─── Energy Diary ──────────────────────────────────────────
+    let energyDate = new Date(); energyDate.setHours(0,0,0,0);
+
+    function changeEnergyDay(delta) {
+        energyDate.setDate(energyDate.getDate() + delta);
+        renderEnergyHeader();
+        loadEnergyData();
+    }
+
+    function renderEnergyHeader() {
+        const h = makeDateNavHeader(energyDate);
+        document.getElementById('energyDateLabel').textContent = h.label;
+        document.getElementById('energyDateLabel').style.color = h.color;
+        document.getElementById('energyDayLabel').textContent = h.sub;
+    }
+
+    function getEnergyKey() { return 'energy_' + energyDate.toLocaleDateString('ko-KR').replace(/\s/g,''); }
+
+    function loadEnergyData() {
+        const raw = localStorage.getItem(getEnergyKey());
+        const d = raw ? JSON.parse(raw) : {};
+        document.getElementById('energyMorning').value = d.morning || '';
+        document.getElementById('energyEvening').value = d.evening || '';
+    }
+
+    const autoSaveEnergy = debounce(() => {
+        const d = {
+            morning: document.getElementById('energyMorning').value,
+            evening: document.getElementById('energyEvening').value,
+            date: energyDate.toLocaleDateString('ko-KR'),
+        };
+        localStorage.setItem(getEnergyKey(), JSON.stringify(d));
+        showAutoSaved('energyAutoSave');
+    }, 600);
+
+    function bindEnergyAutoSave() {
+        ['energyMorning','energyEvening'].forEach(id => {
+            document.getElementById(id).oninput = autoSaveEnergy;
+        });
+    }
+
+    // Init on load
+    (function() {
+        const today = new Date().toLocaleDateString('ko-KR');
+        if (localStorage.getItem('declare_' + today)) {
+            document.getElementById('declareStatus').textContent = '✓ 오늘 이미 선언했습니다. 잘 하고 있어요!';
+        }
+        // daily planner
+        renderDailyHeader();
+        loadDailyData();
+        // monthly plan
+        renderMonthlyHeader();
+        loadMonthlyData();
+        bindMonthlyAutoSave();
+        // weekly plan
+        renderWeekPlanHeader();
+        loadWeekPlanData();
+        bindWeekPlanAutoSave();
+        // weekly (inner diary)
+        renderWeeklyHeader();
+        renderWeekDayButtons();
+        loadInnerForDay(null);
+        loadWeeklySharedData();
+        bindWeeklyAutoSave();
+        // gratitude
+        renderGratitudeHeader();
+        loadGratitudeData();
+        bindGratitudeAutoSave();
+        // emotion
+        renderEmotionHeader();
+        loadEmotionData();
+        bindEmotionAutoSave();
+        // energy diary
+        renderEnergyHeader();
+        loadEnergyData();
+        bindEnergyAutoSave();
+    })();
+</script>
+</div><!-- /appWrapper -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  SUPABASE CONFIG & AUTH
+// ═══════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://nroryfoqqwkatngmtlyp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_9HZdeuELdnjf6IbSG2gB6A_36wnshaq';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+// ── Auth UI ──────────────────────────────────────────────────
+function showLogin() {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('signupForm').style.display = 'none';
+    document.getElementById('authMsg').textContent = '';
+}
+function showSignup() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+    document.getElementById('authMsg').textContent = '';
+}
+function setAuthMsg(msg, isError = true) {
+    const el = document.getElementById('authMsg');
+    el.textContent = msg;
+    el.style.color = isError ? 'var(--accent)' : 'var(--green)';
+}
+
+async function handleLogin() {
+    const email = document.getElementById('authEmail').value.trim();
+    const pw = document.getElementById('authPassword').value;
+    if (!email || !pw) { setAuthMsg('이메일과 비밀번호를 입력해주세요.'); return; }
+    setAuthMsg('로그인 중...', false);
+    const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+    if (error) setAuthMsg('로그인 실패: ' + (error.message.includes('Invalid') ? '이메일 또는 비밀번호가 틀렸어요.' : error.message));
+}
+
+async function handleSignup() {
+    const email = document.getElementById('signupEmail').value.trim();
+    const pw = document.getElementById('signupPassword').value;
+    if (!email || !pw) { setAuthMsg('이메일과 비밀번호를 입력해주세요.'); return; }
+    if (pw.length < 6) { setAuthMsg('비밀번호는 6자 이상이어야 해요.'); return; }
+    setAuthMsg('가입 중...', false);
+    const { error } = await sb.auth.signUp({ email, password: pw });
+    if (error) setAuthMsg('가입 실패: ' + error.message);
+    else setAuthMsg('✓ 가입 완료! 이메일을 확인해서 인증 링크를 클릭해주세요.', false);
+}
+
+async function handleLogout() {
+    await sb.auth.signOut();
+}
+
+// ── Auth State Change ─────────────────────────────────────────
+sb.auth.onAuthStateChange(async (event, session) => {
+    if (session && session.user) {
+        currentUser = session.user;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appWrapper').style.display = 'block'; setTimeout(()=>{ document.getElementById('appWrapper').style.opacity='1'; },50);
+        // Show user email + logout btn in header
+        const headerEl = document.querySelector('header');
+        if (headerEl && !document.getElementById('userBar')) {
+            const bar = document.createElement('div');
+            bar.id = 'userBar';
+            bar.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-muted); margin-top:8px; padding-top:8px; border-top:1px solid var(--border);';
+            bar.innerHTML = '<div style="display:flex; align-items:center; gap:6px;"><span style="color:var(--text-muted);">👤 ' + session.user.email + '</span><span id="syncStatus" style="font-size:0.7rem;"></span></div><div style="display:flex; gap:6px;"><button onclick="manualSync()" style="background:rgba(82,183,136,0.15); border:1px solid rgba(82,183,136,0.3); border-radius:8px; color:var(--green); padding:4px 10px; cursor:pointer; font-size:0.72rem; font-family:inherit;">🔄 동기화</button><button onclick="handleLogout()" style="background:rgba(224,92,92,0.15); border:1px solid rgba(224,92,92,0.3); border-radius:8px; color:var(--accent); padding:4px 10px; cursor:pointer; font-size:0.72rem; font-family:inherit;">로그아웃</button></div>';
+            headerEl.appendChild(bar);
+        }
+        // Load all data from Supabase → localStorage then init app
+        await syncFromCloud();
+        initApp();
+    } else {
+        currentUser = null;
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('appWrapper').style.display = 'none';
+        const bar = document.getElementById('userBar');
+        if (bar) bar.remove();
+    }
+});
+
+// ─── Cloud Sync ───────────────────────────────────────────────
+// 전략: Supabase가 진실의 원천 (source of truth)
+// 로그인 시: 클라우드 → localStorage 전체 덮어쓰기 → 앱 초기화
+// 저장 시: localStorage + 클라우드 동시 저장 (debounce)
+
+// localStorage 직접 접근용 원본 함수 (override 루프 방지)
+const _localSet = localStorage.setItem.bind(localStorage);
+const _localGet = localStorage.getItem.bind(localStorage);
+const _localRemove = localStorage.removeItem.bind(localStorage);
+
+// 클라우드에서 전체 데이터 pull → localStorage 완전 덮어쓰기
+async function syncFromCloud() {
+    if (!currentUser) return;
+    try {
+        showSyncStatus('☁️ 동기화 중...');
+        const { data, error } = await sb
+            .from('user_data')
+            .select('data_key, data_value')
+            .eq('user_id', currentUser.id);
+        if (error) throw error;
+        if (data && data.length) {
+            // 앱 관련 key만 선별해서 localStorage 완전 교체
+            const appPrefixes = ['planner_','weekly2_','inner2_','gratitude2_',
+                'emotion2_','monthly_','weekplan_','energy_','declare_'];
+            // 기존 앱 데이터 전부 지우기 (원본 함수로 - 클라우드 삭제 트리거 안함)
+            Object.keys(localStorage).forEach(k => {
+                if (appPrefixes.some(p => k.startsWith(p))) {
+                    _localRemove(k);
+                }
+            });
+            // 클라우드 데이터 전부 쓰기 (원본 함수로 - 다시 push 안함)
+            data.forEach(row => {
+                _localSet(row.data_key, row.data_value);
+            });
+            showSyncStatus('✓ ' + data.length + '개 항목 동기화 완료', false);
+            console.log('✓ 클라우드에서 ' + data.length + '개 키 로드 완료');
+        } else {
+            showSyncStatus('✓ 연결됨', false);
+        }
+    } catch(e) {
+        showSyncStatus('⚠️ 오프라인 모드');
+        console.warn('클라우드 동기화 실패:', e);
+    }
+}
+
+// 동기화 상태 표시
+function showSyncStatus(msg, isWarn = true) {
+    const el = document.getElementById('syncStatus');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = isWarn ? 'var(--accent2)' : 'var(--green)';
+    if (!isWarn) setTimeout(() => { el.textContent = ''; }, 3000);
+}
+
+// 단일 키 클라우드 push (debounced queue)
+const _pushQueue = {};
+function pushToCloud(key, value) {
+    if (!currentUser) return;
+    clearTimeout(_pushQueue[key]);
+    _pushQueue[key] = setTimeout(async () => {
+        try {
+            await sb.from('user_data').upsert({
+                user_id: currentUser.id,
+                data_key: key,
+                data_value: value,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'user_id,data_key' });
+        } catch(e) {
+            console.warn('클라우드 저장 실패:', key, e);
+        }
+    }, 1000);
+}
+
+// 클라우드에서 단일 키 삭제
+async function deleteFromCloud(key) {
+    if (!currentUser) return;
+    try {
+        await sb.from('user_data').delete()
+            .eq('user_id', currentUser.id)
+            .eq('data_key', key);
+    } catch(e) {
+        console.warn('클라우드 삭제 실패:', e);
+    }
+}
+
+// ── localStorage override → 쓸 때마다 자동 클라우드 push ────
+localStorage.setItem = function(key, value) {
+    _localSet(key, value);
+    pushToCloud(key, value);
+};
+
+localStorage.getItem = function(key) {
+    return _localGet(key);
+};
+
+localStorage.removeItem = function(key) {
+    _localRemove(key);
+    deleteFromCloud(key);
+};
+
+// 수동 동기화 (다른 기기에서 작성한 내용 불러오기)
+async function manualSync() {
+    showSyncStatus('☁️ 동기화 중...');
+    await syncFromCloud();
+    initApp();
+    showToast('🔄 최신 데이터로 업데이트됐어요!');
+}
+
+// ─── App Init (called after cloud sync) ───────────────────────
+function initApp() {
+    const today = new Date().toLocaleDateString('ko-KR');
+    if (localStorage.getItem('declare_' + today)) {
+        const el = document.getElementById('declareStatus');
+        if (el) el.textContent = '✓ 오늘 이미 선언했습니다. 잘 하고 있어요!';
+    }
+    renderDailyHeader();
+    loadDailyData();
+    renderMonthlyHeader();
+    loadMonthlyData();
+    bindMonthlyAutoSave();
+    renderWeekPlanHeader();
+    loadWeekPlanData();
+    buildWeekPlanDays((()=>{ const r=localStorage.getItem(getWeekPlanKey()); return r?JSON.parse(r).dayData||{}:{}; })());
+    bindWeekPlanAutoSave();
+    renderWeeklyHeader();
+    renderWeekDayButtons();
+    loadInnerForDay(null);
+    loadWeeklySharedData();
+    bindWeeklyAutoSave();
+    renderGratitudeHeader();
+    loadGratitudeData();
+    bindGratitudeAutoSave();
+    renderEmotionHeader();
+    loadEmotionData();
+    bindEmotionAutoSave();
+    renderEnergyHeader();
+    loadEnergyData();
+    bindEnergyAutoSave();
+}
+
+// ── Initial auth check ────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Both hidden while checking session
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appWrapper').style.display = 'none';
+
+    // Add loading overlay
+    const loader = document.createElement('div');
+    loader.id = 'appLoader';
+    loader.style.cssText = 'position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;';
+    loader.innerHTML = '<div style="font-size:2rem;">🧘</div><div style="font-size:0.82rem;color:var(--text-muted);">로딩 중...</div>';
+    document.body.appendChild(loader);
+
+    // Check existing session
+    sb.auth.getSession().then(({ data: { session } }) => {
+        loader.remove();
+        if (!session) {
+            document.getElementById('loginScreen').style.display = 'flex';
+        }
+        // onAuthStateChange will handle the rest
+    }).catch(() => {
+        loader.remove();
+        document.getElementById('loginScreen').style.display = 'flex';
+    });
+
+    // Add Enter key on password field
+    document.getElementById('authPassword').addEventListener('keydown', e => {
+        if (e.key === 'Enter') handleLogin();
+    });
+});
+</script>
+
+</body>
+</html>
