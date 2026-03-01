@@ -2630,7 +2630,9 @@ function showSyncStatus(msg, isWarn = true) {
     if (!el) return;
     el.textContent = msg;
     el.style.color = isWarn ? 'var(--accent2)' : 'var(--green)';
-    if (!isWarn) setTimeout(() => { el.textContent = ''; }, 3000);
+    // 항상 3초 후 자동으로 사라짐
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => { el.textContent = ''; }, 3000);
 }
 
 // 단일 키 클라우드 push (debounced queue)
