@@ -1257,7 +1257,7 @@
     // Morning declaration
     function declare() {
         const today = new Date().toLocaleDateString('ko-KR');
-        localStorage.setItem('declare_' + today, '1');
+        localStorage.setItem('declare_' + today, '1'); if (typeof pushToCloud === 'function') pushToCloud('declare_' + today, '1');
         const st = document.getElementById('declareStatus');
         st.textContent = '✓ 오늘도 당신은 충분합니다. 축적 모드 가동!';
         showToast('🧘 축적 모드 시작!');
@@ -1435,7 +1435,10 @@
         return raw ? JSON.parse(raw) : {};
     }
     function savePlannerData(data) {
-        localStorage.setItem('planner_' + dateKey(currentDate), JSON.stringify(data));
+        const key = 'planner_' + dateKey(currentDate);
+        const val = JSON.stringify(data);
+        localStorage.setItem(key, val);
+        if (typeof pushToCloud === 'function') pushToCloud(key, val);
     }
 
     // Debounce helper
@@ -1740,7 +1743,7 @@
             altView: document.getElementById('altView').value,
             truth: document.getElementById('truthScore').value,
         };
-        localStorage.setItem(getInnerKeyForDate(innerSelectedDate), JSON.stringify(data));
+        localStorage.setItem(getInnerKeyForDate(innerSelectedDate), JSON.stringify(data)); if (typeof pushToCloud==='function') pushToCloud(getInnerKeyForDate(innerSelectedDate), JSON.stringify(data));
         renderWeekDayButtons(); // refresh dot indicators
         showAutoSaved('weeklyAutoSave1');
     }, 600);
@@ -1757,7 +1760,7 @@
             dangerSelf: document.getElementById('dangerSelf').value,
             changeSelf: document.getElementById('changeSelf').value,
         };
-        localStorage.setItem(getWeeklyKey(), JSON.stringify(data));
+        localStorage.setItem(getWeeklyKey(), JSON.stringify(data)); if (typeof pushToCloud==='function') pushToCloud(getWeeklyKey(), JSON.stringify(data));
         ['weeklyAutoSave2','weeklyAutoSave3'].forEach(id => showAutoSaved(id));
     }, 600);
 
@@ -1815,7 +1818,7 @@
         };
         const hasContent = Object.values(data).some((v,i) => i > 1 && v.trim());
         if (!hasContent) return;
-        localStorage.setItem(getGratitudeKey(), JSON.stringify(data));
+        localStorage.setItem(getGratitudeKey(), JSON.stringify(data)); if (typeof pushToCloud==='function') pushToCloud(getGratitudeKey(), JSON.stringify(data));
         if (isNew) { const t = Object.keys(localStorage).filter(k => k.startsWith('gratitude2_')).length; document.getElementById('gratitudeDayBadge').textContent = t + '일차'; }
         showAutoSaved('gratitudeAutoSave');
     }, 600);
@@ -1859,7 +1862,7 @@
         };
         const hasContent = ['e1','e2','e3','e4','e5','ePraise'].some(id => data[id].trim());
         if (!hasContent) return;
-        localStorage.setItem(getEmotionKey(), JSON.stringify(data));
+        localStorage.setItem(getEmotionKey(), JSON.stringify(data)); if (typeof pushToCloud==='function') pushToCloud(getEmotionKey(), JSON.stringify(data));
         if (isNew) { const t = Object.keys(localStorage).filter(k => k.startsWith('emotion2_')).length; document.getElementById('emotionDayBadge').textContent = t + '일차'; }
         showAutoSaved('emotionAutoSave');
     }, 600);
@@ -2241,7 +2244,7 @@
             mustItems: monthlyMustItems,
             calData: collectCalData(),
         };
-        localStorage.setItem(getMonthlyKey(), JSON.stringify(d));
+        localStorage.setItem(getMonthlyKey(), JSON.stringify(d)); if (typeof pushToCloud==='function') pushToCloud(getMonthlyKey(), JSON.stringify(d));
         showAutoSaved('monthlyAutoSave');
     }, 600);
 
@@ -2370,7 +2373,7 @@
             mustItems: weekplanMustItems,
             dayData: collectWeekDayData(),
         };
-        localStorage.setItem(getWeekPlanKey(), JSON.stringify(d));
+        localStorage.setItem(getWeekPlanKey(), JSON.stringify(d)); if (typeof pushToCloud==='function') pushToCloud(getWeekPlanKey(), JSON.stringify(d));
         showAutoSaved('weekplanAutoSave');
     }, 600);
 
@@ -2452,7 +2455,7 @@
             evening: document.getElementById('energyEvening').value,
             date: energyDate.toLocaleDateString('ko-KR'),
         };
-        localStorage.setItem(getEnergyKey(), JSON.stringify(d));
+        localStorage.setItem(getEnergyKey(), JSON.stringify(d)); if (typeof pushToCloud==='function') pushToCloud(getEnergyKey(), JSON.stringify(d));
         showAutoSaved('energyAutoSave');
     }, 600);
 
@@ -2585,9 +2588,9 @@ sb.auth.onAuthStateChange(async (event, session) => {
 // 저장 시: localStorage + 클라우드 동시 저장 (debounce)
 
 // localStorage 직접 접근용 원본 함수 (override 루프 방지)
-const _localSet = localStorage.setItem.bind(localStorage);
-const _localGet = localStorage.getItem.bind(localStorage);
-const _localRemove = localStorage.removeItem.bind(localStorage);
+const _localSet = Storage.prototype.setItem.bind(localStorage);
+const _localGet = Storage.prototype.getItem.bind(localStorage);
+const _localRemove = Storage.prototype.removeItem.bind(localStorage);
 
 // 클라우드에서 전체 데이터 pull → localStorage 완전 덮어쓰기
 async function syncFromCloud() {
@@ -2666,20 +2669,7 @@ async function deleteFromCloud(key) {
     }
 }
 
-// ── localStorage override → 쓸 때마다 자동 클라우드 push ────
-localStorage.setItem = function(key, value) {
-    _localSet(key, value);
-    pushToCloud(key, value);
-};
-
-localStorage.getItem = function(key) {
-    return _localGet(key);
-};
-
-localStorage.removeItem = function(key) {
-    _localRemove(key);
-    deleteFromCloud(key);
-};
+// 클라우드 push는 각 저장 함수에 직접 내장됨
 
 // 수동 동기화 (다른 기기에서 작성한 내용 불러오기)
 async function manualSync() {
