@@ -577,7 +577,7 @@
         .card:nth-child(3) { animation-delay: 0.3s; }
         .card:nth-child(4) { animation-delay: 0.4s; }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -2510,7 +2510,7 @@
 // ═══════════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://nroryfoqqwkatngmtlyp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_9HZdeuELdnjf6IbSG2gB6A_36wnshaq';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 
