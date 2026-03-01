@@ -2721,30 +2721,43 @@ function initApp() {
 
 // ── Initial auth check ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    // Both hidden while checking session
+    // 로딩 오버레이 표시
+    const loader = document.createElement('div');
+    loader.id = 'appLoader';
+    loader.style.cssText = 'position:fixed;inset:0;background:#0f1117;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;';
+    loader.innerHTML = '<div style="font-size:2.5rem;">🧘</div><div style="font-size:0.85rem;color:#8b90a8;margin-top:8px;">로딩 중...</div>';
+    document.body.appendChild(loader);
+
+    // 둘 다 숨기기
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appWrapper').style.display = 'none';
 
-    // Add loading overlay
-    const loader = document.createElement('div');
-    loader.id = 'appLoader';
-    loader.style.cssText = 'position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;';
-    loader.innerHTML = '<div style="font-size:2rem;">🧘</div><div style="font-size:0.82rem;color:var(--text-muted);">로딩 중...</div>';
-    document.body.appendChild(loader);
-
-    // Check existing session
-    sb.auth.getSession().then(({ data: { session } }) => {
+    // 타임아웃 안전장치 - 5초 후에도 안되면 로그인 화면 표시
+    const safetyTimer = setTimeout(() => {
         loader.remove();
-        if (!session) {
+        document.getElementById('loginScreen').style.display = 'flex';
+    }, 5000);
+
+    // 세션 확인
+    sb.auth.getSession().then(({ data: { session } }) => {
+        clearTimeout(safetyTimer);
+        loader.remove();
+        if (session && session.user) {
+            // 세션 있으면 onAuthStateChange가 앱 초기화 처리
+            // 여기서도 한번 더 보장
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appWrapper').style.display = 'block';
+            setTimeout(() => { document.getElementById('appWrapper').style.opacity = '1'; }, 50);
+        } else {
             document.getElementById('loginScreen').style.display = 'flex';
         }
-        // onAuthStateChange will handle the rest
     }).catch(() => {
+        clearTimeout(safetyTimer);
         loader.remove();
         document.getElementById('loginScreen').style.display = 'flex';
     });
 
-    // Add Enter key on password field
+    // 엔터키 로그인
     document.getElementById('authPassword').addEventListener('keydown', e => {
         if (e.key === 'Enter') handleLogin();
     });
